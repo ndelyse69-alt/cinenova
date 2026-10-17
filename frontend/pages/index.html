@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineNova — Stream the Future of Entertainment</title>
+    <meta name="description" content="CineNova is a premium streaming destination for movies and series — trending titles, curated picks, and a library that keeps growing.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="CineNova — Stream the Future of Entertainment">
+    <meta property="og:description" content="CineNova is a premium streaming destination for movies and series — trending titles, curated picks, and a library that keeps growing.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://api.themoviedb.org">
+    <link rel="preconnect" href="https://image.tmdb.org">
+</head>
+<body class="no-sidebar">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <main id="main-content">
+
+    <!-- ==================== HERO ==================== -->
+    <section class="relative min-h-[760px] lg:min-h-screen flex items-center justify-center overflow-hidden hero-cinema" id="hero" aria-label="Hero banner">
+
+        <div id="hero-bg" class="absolute inset-0 z-0 bg-cover bg-center transition-all duration-1000" style="background-image: linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.82)), url('https://via.placeholder.com/1920x1080/0a0a0f/ff6a1a?text=CineNova');">
+            <div class="absolute inset-0 hero-bg-shade"></div>
+        </div>
+
+        <div class="hero-poster-marquee absolute inset-0 z-[1]" aria-hidden="true">
+            <div class="hero-poster-row hero-poster-row--one" id="hero-posters-one"></div>
+            <div class="hero-poster-row hero-poster-row--two" id="hero-posters-two"></div>
+        </div>
+
+        <div class="hero-top-scrim absolute top-0 inset-x-0 z-30 flex items-center justify-between px-5 sm:px-8 py-5">
+            <a href="index.html" class="flex items-center gap-2.5" aria-label="CineNova — home">
+                <img src="../images/logo.png" alt="CineNova" class="h-10 w-10 sm:h-11 sm:w-11 object-contain flex-shrink-0" width="615" height="640" />
+                <span class="text-lg sm:text-xl font-bold text-white tracking-tight hidden xs:inline">Cine<span class="text-orange-500">Nova</span></span>
+            </a>
+            <a href="signup.html" class="btn-ember px-5 sm:px-6 py-2.5 rounded-full text-sm font-semibold">Sign Up</a>
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center pt-16">
+            <div class="hero-content-panel mx-auto max-w-2xl">
+                <div class="flex justify-center mb-4 animate-fade-in-up">
+                    <img src="../images/logo.png" alt="CineNova" class="h-14 w-14 sm:h-16 sm:w-16 drop-shadow-2xl object-contain flex-shrink-0" width="615" height="640" />
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-none animate-fade-in-up animation-delay-200">
+                    Cine<span class="text-orange-500">Nova</span>
+                </h1>
+
+                <p class="hero-welcome animate-fade-in-up animation-delay-400">
+                    Welcome to CineNova — enjoy trending movies and TV shows.
+                </p>
+                <p class="hero-description animate-fade-in-up animation-delay-400">
+                    Great stories. One premium streaming experience.
+                </p>
+
+                <div class="flex justify-center mt-6 animate-fade-in-up animation-delay-600">
+                    <a href="movies.html" class="btn-ember hero-cta-compact px-5 py-2.5 rounded-full font-bold text-sm flex items-center gap-2" id="hero-cta"></a>
+                </div>
+
+                <div class="mt-4 animate-fade-in-up animation-delay-700">
+                    <p class="text-xs sm:text-sm text-gray-300">New to CineNova? <a href="signup.html" class="text-orange-400 font-semibold hover:underline">Sign up free</a></p>
+                </div>
+            </div>
+
+            <div class="absolute bottom-7 left-1/2 -translate-x-1/2 animate-bounce">
+                <a href="#trending" class="text-gray-400 hover:text-white transition-colors" aria-label="Scroll to Trending Now" id="hero-scroll-down"></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TRENDING NOW (movies) ==================== -->
+    <section class="py-12 bg-black/40 backdrop-blur-sm border-t border-orange-500/10" id="trending" aria-label="Trending movies">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-6 gap-3">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                        <span class="section-icon" id="icon-trending-movies"></span> Trending Now
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">Top movies this week · auto-scrolling</p>
+                </div>
+                <a href="movies.html" class="text-orange-500 hover:text-orange-400 transition-colors flex items-center gap-1 text-sm font-medium">
+                    Browse All Movies <span id="icon-chevron-1"></span>
+                </a>
+            </div>
+
+            <div class="carousel-track flex gap-4 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="track-trending-movies" data-speed="1.2"></div>
+
+            <div class="text-center text-gray-500 text-xs mt-2 flex items-center justify-center gap-6">
+                <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Auto-scroll</span>
+                <button type="button" data-toggle-scroll data-track="track-trending-movies" class="text-orange-400 hover:text-orange-300 text-xs underline-offset-2 hover:underline transition">Pause</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TRENDING SERIES ==================== -->
+    <section class="py-12 bg-black/30 backdrop-blur-sm border-t border-orange-500/10" id="trending-series" aria-label="Trending series">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-6 gap-3">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                        <span class="section-icon" id="icon-trending-series"></span> Trending Series
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">Top series this week · auto-scrolling</p>
+                </div>
+                <a href="series.html" class="text-orange-500 hover:text-orange-400 transition-colors flex items-center gap-1 text-sm font-medium">
+                    Browse All Series <span id="icon-chevron-2"></span>
+                </a>
+            </div>
+
+            <div class="carousel-track flex gap-4 overflow-x-auto scroll-smooth pb-4 hide-scrollbar" id="track-trending-series" data-speed="1.0"></div>
+
+            <div class="text-center text-gray-500 text-xs mt-2 flex items-center justify-center gap-6">
+                <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Auto-scroll</span>
+                <button type="button" data-toggle-scroll data-track="track-trending-series" class="text-orange-400 hover:text-orange-300 text-xs underline-offset-2 hover:underline transition">Pause</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MORE REASONS TO JOIN ==================== -->
+    <section class="py-16 bg-black/30 backdrop-blur-sm border-y border-orange-500/10" id="reasons">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">More Reasons to Join</h2>
+                <p class="text-gray-400 mt-2">Discover why millions choose CineNova</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="reasons-grid"></div>
+        </div>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section class="py-16 bg-black/50 backdrop-blur-sm" id="faq">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">Frequently Asked Questions</h2>
+                <p class="text-gray-400 mt-2">Everything you need to know about CineNova</p>
+            </div>
+            <div class="space-y-3" id="faq-list"></div>
+        </div>
+    </section>
+
+    <!-- ==================== DEVELOPER CARD ==================== -->
+    <section class="py-12 sm:py-16 bg-black/40 backdrop-blur-sm border-t border-orange-500/10" id="developer">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+            <div class="text-center mb-7 sm:mb-8">
+                <span class="developer-eyebrow">The creator behind CineNova</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-2">Meet the Developer</h2>
+            </div>
+
+            <article class="developer-card">
+                <div class="developer-photo-column">
+                    <div class="developer-photo-wrap">
+                        <div class="developer-photo-frame">
+                            <img src="../images/developer-elyse.jpg" alt="Ndayambaje Elyse" class="developer-photo" width="530" height="822" loading="lazy">
+                            <div class="developer-photo-glow"></div>
+                        </div>
+                        <div class="developer-photo-badge" id="developer-badge" aria-label="Verified developer"></div>
+                    </div>
+                    <div class="developer-photo-caption">
+                        <span class="developer-description-mark">“</span>
+                        <p>Building exceptional digital experiences with clean code and modern design.</p>
+                    </div>
+                </div>
+
+                <div class="developer-info">
+                    <div class="developer-name-row">
+                        <div>
+                            <p class="developer-kicker">CEO &amp; <span>Founder of CineNova</span></p>
+                            <h3>Ndayambaje <strong>Elyse</strong></h3>
+                        </div>
+                        <span class="developer-crown" aria-hidden="true">♛</span>
+                    </div>
+
+                    <div class="developer-facts">
+                        <div class="developer-fact">
+                            <span class="developer-fact-icon" id="developer-country-icon"></span>
+                            <div><span>Country</span><strong>Rwanda</strong></div>
+                            <span class="developer-flag" aria-hidden="true">🇷🇼</span>
+                        </div>
+                        <div class="developer-fact">
+                            <span class="developer-fact-icon" id="developer-district-icon"></span>
+                            <div><span>City</span><strong>Kigali City</strong></div>
+                            <span class="developer-fact-mini" aria-hidden="true">RW</span>
+                        </div>
+                        <div class="developer-fact developer-phone-fact">
+                            <span class="developer-fact-icon" id="developer-phone-icon"></span>
+                            <div><span>Phone Number</span><strong>0792257855</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    </main>
+
+    <div id="footer-root"></div>
+
+    <script src="../js/icons.js"></script>
+    <script src="../js/cards.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/common.js" defer></script>
+    <script src="../js/home.js" defer></script>
+    <script>
+        document.getElementById('hero-cta').innerHTML = cnIcon('play', 'w-4 h-4') + ' Continue Watching';
+        document.getElementById('hero-scroll-down').innerHTML = cnIcon('chevron-down', 'w-6 h-6');
+        document.getElementById('icon-trending-movies').innerHTML = cnIcon('flame', 'w-4 h-4');
+        document.getElementById('icon-trending-series').innerHTML = cnIcon('tv', 'w-4 h-4');
+        document.getElementById('icon-chevron-1').innerHTML = cnIcon('chevron', 'w-4 h-4');
+        document.getElementById('icon-chevron-2').innerHTML = cnIcon('chevron', 'w-4 h-4');
+        document.getElementById('developer-badge').innerHTML = cnIcon('check', 'w-4 h-4 text-white');
+        document.getElementById('developer-country-icon').innerHTML = cnIcon('globe', 'w-6 h-6');
+        document.getElementById('developer-district-icon').innerHTML = cnIcon('pin', 'w-6 h-6');
+        document.getElementById('developer-phone-icon').innerHTML = cnIcon('phone', 'w-6 h-6');
+        CNFooter.render();
+
+        const REASONS = [
+            { icon: 'devices', title: 'Watch on any device', description: 'Stream on your phone, tablet, laptop, or TV without paying more.' },
+            { icon: 'film', title: 'Unlimited movies & shows', description: 'Access thousands of titles from classic favorites to the latest releases.' },
+            { icon: 'bolt', title: 'Fast & buffer-free', description: 'Optimized streaming with adaptive bitrate for smooth playback.' },
+            { icon: 'target', title: 'Personalized recommendations', description: 'Get suggestions tailored to your taste with our smart algorithm.' },
+        ];
+        document.getElementById('reasons-grid').innerHTML = REASONS.map((r, i) =>
+            '<div class="group bg-black/40 backdrop-blur-lg border border-white/5 rounded-2xl p-6 hover:border-orange-500/40 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/10 animate-fade-in-up" style="animation-delay: ' + (i * 150) + 'ms">' +
+              '<div class="section-icon w-12 h-12 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300">' + cnIcon(r.icon, 'w-6 h-6') + '</div>' +
+              '<h3 class="text-xl font-bold text-white mb-2">' + r.title + '</h3>' +
+              '<p class="text-gray-400 text-sm leading-relaxed">' + r.description + '</p>' +
+            '</div>'
+        ).join('');
+
+        const FAQS = [
+            { question: 'What is CineNova?', answer: 'CineNova is a premium streaming service that offers a vast library of movies, TV shows, documentaries, and more. Watch anywhere, anytime, on any device.' },
+            { question: 'How much does CineNova cost?', answer: 'CineNova offers flexible plans starting at just $8.99/month. Choose from Basic, Standard, or Premium plans to fit your needs and budget.' },
+            { question: 'Can I watch on multiple devices?', answer: 'Yes — CineNova supports streaming on up to 4 devices simultaneously depending on your plan. Enjoy it on your TV, phone, tablet, or laptop.' },
+            { question: 'Do I need to commit to a contract?', answer: 'No contracts required. Cancel anytime with just a few clicks — no hidden fees or penalties.' },
+            { question: 'What content is available on CineNova?', answer: 'CineNova features thousands of movies and TV shows, including exclusive originals, blockbuster hits, classic films, and international content.' },
+        ];
+        document.getElementById('faq-list').innerHTML = FAQS.map((f) =>
+            '<div class="bg-black/40 backdrop-blur-lg border border-white/5 rounded-xl overflow-hidden hover:border-orange-500/20 transition-all duration-300 faq-item">' +
+              '<button type="button" class="w-full px-6 py-4 text-left flex items-center justify-between gap-4 focus:outline-none rounded-xl transition-colors group" aria-expanded="false" onclick="toggleFAQ(this)">' +
+                '<span class="text-white font-semibold text-sm sm:text-base group-hover:text-orange-400 transition-colors">' + f.question + '</span>' +
+                '<span class="faq-icon text-orange-500 text-xl flex-shrink-0">+</span>' +
+              '</button>' +
+              '<div class="px-6 max-h-0 overflow-hidden transition-all duration-300 ease-in-out"><p class="text-gray-400 pb-4 text-sm leading-relaxed">' + f.answer + '</p></div>' +
+            '</div>'
+        ).join('');
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CineNova",
+        "description": "CineNova is a premium streaming destination for movies and series — trending titles, curated picks, and a library that keeps growing.",
+        "url": "index.html"
+    }
+    </script>
+</body>
+</html>

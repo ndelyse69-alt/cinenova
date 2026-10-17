@@ -1,0 +1,18 @@
+# CineNova — document root is this directory (cinenova/), a sibling
+# of frontend/, backend/, and uploads/ — no doc-root symlink tricks
+# needed now that the three top-level folders are real siblings.
+
+# Keep the project root on index.html so its relative redirect moves the browser
+# to /cinenova/frontend/pages/index.html. This is important because the pages
+# use relative CSS/JS/image paths and auth.js derives the project base from
+# the /frontend/ URL segment.
+Options -Indexes
+DirectoryIndex index.html
+
+# backend/ is API + PHP only — block direct browsing of non-PHP
+# assets that have no reason to be requested directly (in addition
+# to the folder-specific .htaccess files under backend/storage and
+# uploads/).
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>

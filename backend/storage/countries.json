@@ -1,0 +1,10 @@
+[
+    {"id": 1, "name": "United States", "code": "US", "status": "active"},
+    {"id": 2, "name": "United Kingdom", "code": "GB", "status": "active"},
+    {"id": 3, "name": "South Korea", "code": "KR", "status": "active"},
+    {"id": 4, "name": "India", "code": "IN", "status": "active"},
+    {"id": 5, "name": "Spain", "code": "ES", "status": "active"},
+    {"id": 6, "name": "Rwanda", "code": "RW", "status": "active"},
+    {"id": 7, "name": "Nigeria", "code": "NG", "status": "active"},
+    {"id": 8, "name": "Japan", "code": "JP", "status": "inactive"}
+]

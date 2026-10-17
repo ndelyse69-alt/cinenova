@@ -1,0 +1,79 @@
+[
+    {
+        "id": 1,
+        "username": "elyse",
+        "name": "Elyse",
+        "email": "elyse@cinenova.example",
+        "password_hash": "$2y$10$A33gS3anterc.p2lQ/NRmeI3Bz1RPdpFqa9oPIDKl91POykrOvGZO",
+        "role": "admin",
+        "plan": "Premium",
+        "status": "active",
+        "joined": "2026-08-16"
+    },
+    {
+        "id": 2,
+        "name": "Amara Uwase",
+        "email": "amara.uwase@example.com",
+        "password_hash": "$2y$10$lvL7/gpElKWRj9u6UnA2Y.oDTSz/KEpRcYtgdKq8bZgZs1kFt3EGW",
+        "plan": "Premium",
+        "status": "active",
+        "joined": "2025-11-02",
+        "username": "amarauwase",
+        "role": "user"
+    },
+    {
+        "id": 3,
+        "name": "Jordan Blake",
+        "email": "jordan.blake@example.com",
+        "password_hash": "$2y$10$PGKNgtTxOL6SM0MWpPK7rO3x8RMOpIHTwvt85IN4xHsKX6.Mx6Vme",
+        "plan": "Standard",
+        "status": "active",
+        "joined": "2025-12-14",
+        "username": "jordanblake",
+        "role": "user"
+    },
+    {
+        "id": 4,
+        "name": "Priya Nair",
+        "email": "priya.nair@example.com",
+        "password_hash": "$2y$10$sH7TxVSc/Tk20cob.SRI4.E9GkPeT/7Ni/R4Y0SILtJwpa0IX4UvO",
+        "plan": "Premium",
+        "status": "suspended",
+        "joined": "2026-01-05",
+        "username": "priyanair",
+        "role": "user"
+    },
+    {
+        "id": 5,
+        "name": "Liam Chen",
+        "email": "liam.chen@example.com",
+        "password_hash": "$2y$10$wWmRMpRpC4H5vR8UKz9/RedmnD4b7zxnYoM66NRXaTuodAIE5A6Fi",
+        "plan": "Free",
+        "status": "active",
+        "joined": "2026-02-20",
+        "username": "liamchen",
+        "role": "user"
+    },
+    {
+        "id": 6,
+        "name": "Sofia Torres",
+        "email": "sofia.torres@example.com",
+        "password_hash": "$2y$10$dFDNFA5ut9OxnlAbZkaTc.4Lp.4dtI3DWkLo5AoN6SQK9Pm0rxkEG",
+        "plan": "Standard",
+        "status": "active",
+        "joined": "2026-03-11",
+        "username": "sofiatorres",
+        "role": "user"
+    },
+    {
+        "id": 7,
+        "name": "Kwame Mensah",
+        "email": "kwame.mensah@example.com",
+        "password_hash": "$2y$10$3tTvoSi4Rxg4x6ttoeA/4eagYjJdySOT.jrTgSHpNw08wm6DcZCu6",
+        "plan": "Premium",
+        "status": "inactive",
+        "joined": "2026-04-30",
+        "username": "kwamemensah",
+        "role": "user"
+    }
+]

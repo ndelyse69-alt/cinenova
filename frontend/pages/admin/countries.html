@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countries — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('countries', 'Countries', 'Origin-country labels used across the catalog').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-panel">' +
+                    '<div class="admin-panel-head">' +
+                        '<span class="admin-panel-title">All Countries</span>' +
+                        '<form id="add-form" class="flex gap-2 flex-wrap">' +
+                            '<input type="text" id="add-name" class="admin-input" placeholder="Country name" required>' +
+                            '<input type="text" id="add-code" class="admin-input" placeholder="Code (e.g. US)" style="max-width:100px">' +
+                            '<button class="admin-btn admin-btn-primary" type="submit">' + cnIcon('plus', 'w-4 h-4') + ' Add</button>' +
+                        '</form>' +
+                    '</div>' +
+                    '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Name</th><th>Code</th><th></th></tr></thead><tbody id="table-body"></tbody></table></div>' +
+                '</div>';
+
+            function load() {
+                CNAdmin.get('../../../backend/api/admin/countries.php').then(function (res) {
+                    const rows = res.data.countries || [];
+                    document.getElementById('table-body').innerHTML = rows.length ? rows.map((c) =>
+                        '<tr data-id="' + c.id + '">' +
+                            '<td class="admin-cell-title" data-field="name">' + CNAdmin.esc(c.name) + '</td>' +
+                            '<td class="text-gray-500" data-field="code">' + CNAdmin.esc(c.code || '') + '</td>' +
+                            '<td><div class="flex gap-2 justify-end">' +
+                                '<button class="admin-icon-btn" data-action="edit" title="Edit">' + cnIcon('edit', 'w-4 h-4') + '</button>' +
+                                '<button class="admin-icon-btn admin-icon-btn--danger" data-action="delete" title="Delete">' + cnIcon('trash', 'w-4 h-4') + '</button>' +
+                            '</div></td>' +
+                        '</tr>'
+                    ).join('') : '<tr><td colspan="3" class="admin-table-empty">No countries yet.</td></tr>';
+                });
+            }
+
+            document.getElementById('add-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const name = document.getElementById('add-name');
+                const code = document.getElementById('add-code');
+                CNAdmin.post('../../../backend/api/admin/countries.php', { action: 'create', name: name.value, code: code.value })
+                    .then(() => { name.value = ''; code.value = ''; CNAdmin.flash('success', 'Country added.'); load(); })
+                    .catch((err) => CNAdmin.flash('error', err.message));
+            });
+
+            document.getElementById('table-body').addEventListener('click', function (e) {
+                const row = e.target.closest('tr');
+                if (!row) return;
+                const id = row.dataset.id;
+
+                if (e.target.closest('[data-action="delete"]')) {
+                    if (!confirm('Delete this country?')) return;
+                    CNAdmin.post('../../../backend/api/admin/countries.php', { action: 'delete', id: id })
+                        .then(() => { CNAdmin.flash('success', 'Country removed.'); load(); });
+                }
+                if (e.target.closest('[data-action="edit"]')) {
+                    const currentName = row.querySelector('[data-field="name"]').textContent;
+                    const currentCode = row.querySelector('[data-field="code"]').textContent;
+                    const name = prompt('Country name', currentName);
+                    if (!name) return;
+                    const code = prompt('Country code', currentCode) || '';
+                    CNAdmin.post('../../../backend/api/admin/countries.php', { action: 'update', id: id, name: name, code: code })
+                        .then(() => { CNAdmin.flash('success', 'Country updated.'); load(); })
+                        .catch((err) => CNAdmin.flash('error', err.message));
+                }
+            });
+
+            load();
+        });
+    </script>
+</body>
+</html>

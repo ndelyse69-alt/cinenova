@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('settings', 'Settings', 'Site-wide configuration').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-panel"><div class="admin-panel-head"><span class="admin-panel-title">General</span></div>' +
+                '<div class="admin-panel-body"><form id="settings-form">' +
+                    '<div class="admin-form-grid">' +
+                        '<div class="admin-field"><label class="admin-label">Site name</label><input type="text" name="site_name" class="admin-input"></div>' +
+                        '<div class="admin-field"><label class="admin-label">Tagline</label><input type="text" name="tagline" class="admin-input"></div>' +
+                        '<div class="admin-field"><label class="admin-label">Contact email</label><input type="email" name="contact_email" class="admin-input"></div>' +
+                    '</div>' +
+                    '<div class="admin-field"><label class="admin-label">Description</label><textarea name="description" class="admin-textarea" rows="3"></textarea></div>' +
+                    '<div class="admin-field"><label class="flex items-center gap-2.5 text-sm text-white"><input type="checkbox" name="maintenance_mode" class="admin-check"> Maintenance mode</label></div>' +
+                    '<div class="admin-field"><label class="flex items-center gap-2.5 text-sm text-white"><input type="checkbox" name="tmdb_enabled" class="admin-check"> TMDB integration enabled</label></div>' +
+                    '<button type="submit" class="admin-btn admin-btn-primary">Save Settings</button>' +
+                '</form></div></div>';
+
+            const form = document.getElementById('settings-form');
+            CNAdmin.get('../../../backend/api/admin/settings.php').then(function (res) {
+                const s = res.data.settings;
+                Object.keys(s).forEach((key) => {
+                    const el = form.elements[key];
+                    if (!el) return;
+                    if (el.type === 'checkbox') el.checked = !!s[key]; else el.value = s[key];
+                });
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const fields = {};
+                ['site_name', 'tagline', 'description', 'contact_email'].forEach((k) => { fields[k] = form.elements[k].value; });
+                fields.maintenance_mode = form.elements.maintenance_mode.checked ? '1' : '0';
+                fields.tmdb_enabled = form.elements.tmdb_enabled.checked ? '1' : '0';
+                CNAdmin.post('../../../backend/api/admin/settings.php', fields)
+                    .then(() => CNAdmin.flash('success', 'Settings saved.'))
+                    .catch((err) => CNAdmin.flash('error', err.message));
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Movies — CineNova</title>
+    <meta name="description" content="Browse popular, top-rated, and trending movies on CineNova, with genre and country filters plus instant search.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://api.themoviedb.org">
+    <link rel="preconnect" href="https://image.tmdb.org">
+</head>
+<body class="cinematic-page">
+    <div class="site-cinematic-bg" aria-hidden="true">
+        <div class="site-cinematic-bg__image"></div>
+        <div class="site-cinematic-bg__scrim"></div>
+    </div>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div id="sidebar-root"></div>
+
+    <main id="main-content">
+
+    <!-- ==================== CINEMATIC HERO ==================== -->
+    <section class="relative min-h-[78vh] lg:min-h-[88vh] flex items-end overflow-hidden catalog-hero" id="hero">
+        <div id="hero-bg" class="absolute inset-0 z-0 bg-cover bg-center transition-all duration-[1500ms] ease-in-out catalog-hero-bg">
+            <div class="absolute inset-0 hero-gradient z-10"></div>
+            <div class="absolute inset-0 catalog-hero-overlay z-10"></div>
+        </div>
+
+        <div class="hero-poster-marquee absolute inset-0 z-[1]" aria-hidden="true">
+            <div class="hero-poster-row hero-poster-row--one" id="hero-posters-one"></div>
+            <div class="hero-poster-row hero-poster-row--two" id="hero-posters-two"></div>
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pb-14 lg:pb-20 pt-24">
+            <div id="hero-content" class="text-center max-w-4xl mx-auto animate-fade-in-up">
+                <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-orange-300 mb-4" id="hero-badge"></p>
+                <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight drop-shadow-2xl transition-all duration-500">Browse Movies</h1>
+                <div id="hero-meta" class="flex flex-wrap justify-center gap-3 mt-3 text-sm text-gray-300 font-medium">
+                    <span id="hero-year" class="meta-pill font-mono"></span>
+                    <span id="hero-rating" class="meta-pill meta-pill--rating"></span>
+                </div>
+                <p id="hero-desc" class="text-gray-200 mt-4 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed drop-shadow-lg transition-all duration-500">Discover your next favorite film.</p>
+
+                <div class="flex flex-wrap justify-center gap-4 mt-6">
+                    <a id="hero-watch-btn" href="#" class="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:shadow-xl hover:shadow-orange-500/40 hover:scale-105 transition-all duration-300 flex items-center gap-2"></a>
+                    <button type="button" class="px-8 py-3 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold rounded-full hover:bg-white/20 hover:scale-105 transition-all duration-300 flex items-center gap-2" id="hero-watch-later-btn"></button>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center gap-3 overflow-x-auto hide-scrollbar pb-2 px-4" id="hero-thumbs"></div>
+        </div>
+    </section>
+
+    <div id="filterbar-root"></div>
+
+    <!-- ==================== ROW 1 ==================== -->
+    <section class="reveal py-8 bg-gradient-to-b from-transparent to-black/40 backdrop-blur-sm border-t border-orange-500/10 relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="w-1.5 h-8 bg-orange-500 rounded-full"></span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-white">Popular Action Movies</h2>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto hide-scrollbar pb-4" id="row1-track"></div>
+        </div>
+    </section>
+
+    <!-- ==================== ROW 2 ==================== -->
+    <section class="reveal py-6 bg-black/30 backdrop-blur-sm relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="w-1.5 h-8 bg-blue-500 rounded-full"></span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-white">Top Rated Movies</h2>
+                </div>
+            </div>
+            <div class="flex gap-4 overflow-x-auto hide-scrollbar pb-4" id="row2-track"></div>
+        </div>
+    </section>
+
+    <!-- ==================== ALL MOVIES (filterable, infinite scroll) ==================== -->
+    <section id="grid-section" class="reveal py-10 bg-black/50 backdrop-blur-sm relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 id="grid-title" class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 mb-6">
+                <span class="section-icon" id="grid-title-icon"></span> All Movies
+            </h2>
+
+            <div id="grid-skeleton" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+                <div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div><div class="skeleton-box aspect-poster rounded-xl"></div>
+            </div>
+
+            <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 hidden"></div>
+
+            <div id="loaderContainer" class="flex justify-center mt-8 hidden">
+                <button type="button" id="loadMoreBtn" class="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-orange-500/40 hover:scale-105 transition-all duration-300">
+                    Load More Movies
+                </button>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <div id="footer-root"></div>
+
+    <script src="../js/icons.js"></script>
+    <script src="../js/cards.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/filterbar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/common.js" defer></script>
+    <script>
+        window.CINENOVA_MEDIA_TYPE = 'movie';
+        window.CINENOVA_CATALOG_MODE = 'trending';
+        window.CINENOVA_ACTIVE_PAGE = 'movies';
+        window.CINENOVA_ROW1 = { params: { with_genres: '28' } };
+        window.CINENOVA_ROW2 = { params: { sort: 'vote_average.desc' } };
+        document.getElementById('hero-badge').innerHTML = cnIcon('film', 'w-3.5 h-3.5') + ' Full Movie Library';
+        document.getElementById('hero-watch-btn').innerHTML = cnIcon('play', 'w-5 h-5') + ' Watch Now';
+        document.getElementById('hero-watch-later-btn').innerHTML = cnIcon('clock', 'w-5 h-5') + ' Watch Later';
+        document.getElementById('grid-title-icon').innerHTML = cnIcon('film', 'w-4 h-4');
+    </script>
+    <script src="../js/catalog.js" defer></script>
+</body>
+</html>

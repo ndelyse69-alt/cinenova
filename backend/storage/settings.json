@@ -1,0 +1,12 @@
+{
+    "site_name": "CineNova",
+    "site_tagline": "Stream the Future of Entertainment",
+    "site_description": "CineNova is a premium streaming destination for movies and series \u2014 trending titles, curated picks, and a library that keeps growing.",
+    "support_email": "support@cinenova.example",
+    "maintenance_mode": false,
+    "social": {
+        "twitter": "https://twitter.com/cinenova",
+        "facebook": "https://facebook.com/cinenova",
+        "instagram": "https://instagram.com/cinenova"
+    }
+}

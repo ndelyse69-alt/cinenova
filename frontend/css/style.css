@@ -1,0 +1,1479 @@
+:root {
+    --color-orange: #ff6a1a;
+    --color-orange-light: #ffa149;
+    --sidebar-offset: 192px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #050505;
+    color: #fff;
+    overflow-x: hidden;
+}
+@media (min-width: 1024px) {
+    body:not(.no-sidebar) { padding-left: var(--sidebar-offset); }
+}
+
+/* Hero top row (logo + Sign Up) used on the header-free landing page */
+.hero-top-scrim {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: var(--color-orange); border-radius: 4px; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Animations */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulseSlow { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } }
+@keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
+
+.animate-fade-in-up { opacity: 0; animation: fadeInUp 0.6s ease forwards; }
+.animate-pulse-slow { animation: pulseSlow 6s ease-in-out infinite; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-600 { animation-delay: 600ms; }
+.animation-delay-700 { animation-delay: 700ms; }
+
+.skeleton-box { background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%); background-size: 200px 100%; animation: shimmer 1.5s infinite; }
+
+/* Accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--color-orange);
+    outline-offset: 2px;
+}
+.skip-link {
+    position: absolute; left: 1rem; top: -3rem; z-index: 200;
+    background: var(--color-orange); color: #0a0a0f; font-weight: 700;
+    padding: 0.6rem 1rem; border-radius: 0.5rem; transition: top 0.2s ease;
+}
+.skip-link:focus { top: 1rem; }
+
+/* Glassmorphism */
+.glass-sidebar {
+    background: rgba(10, 10, 10, 0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+.glass-panel {
+    background: rgba(5, 5, 5, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Sidebar items */
+.sidebar-item { transition: background 0.2s ease, color 0.2s ease; }
+.sidebar-item:hover { background: rgba(255, 255, 255, 0.05); }
+.sidebar-item.is-active { background: rgba(255, 106, 26, 0.14); color: #fff; box-shadow: inset 2px 0 0 var(--color-orange); }
+
+.cat-item.is-active, .country-item.is-active {
+    background: rgba(255, 106, 26, 0.15);
+    box-shadow: inset 2px 0 0 var(--color-orange);
+    color: #fff;
+}
+
+/* Buttons */
+.btn-ember {
+    background: linear-gradient(to right, var(--color-orange), #e55a2b);
+    color: #fff;
+    font-weight: 700;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-ember:hover { transform: translateY(-1px) scale(1.03); box-shadow: 0 10px 28px -8px rgba(255, 106, 26, 0.55); }
+.btn-ghost {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-1px) scale(1.03); }
+
+/* Hero */
+.hero-gradient { background: linear-gradient(to top, #050505 5%, rgba(5, 5, 5, 0.8) 30%, rgba(0, 0, 0, 0) 100%); }
+.hero-thumb { transition: all 0.3s ease; }
+.hero-thumb:hover { transform: scale(1.05); border-color: var(--color-orange); }
+
+.trending-panel { transition: opacity 0.5s ease, transform 0.5s ease; }
+.trending-panel.active { opacity: 1; transform: translateX(0); pointer-events: auto; position: relative; }
+.trending-panel.inactive { opacity: 0; transform: translateX(20px); pointer-events: none; position: absolute; top: 0; left: 0; right: 0; }
+.trending-panels { min-height: 320px; }
+
+/* Movie / grid card (browse pages, carousels, live search) */
+.movie-card { transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+@media (max-width: 480px) {
+    .movie-card { width: 128px !important; }
+}
+
+/* FAQ accordion */
+.faq-item button[aria-expanded="true"] .faq-icon { transform: rotate(45deg); }
+.faq-item button[aria-expanded="true"] + div { max-height: 300px; }
+.faq-icon { transition: transform 0.25s ease; }
+
+/* Centered Categories/Countries filter bar (replaces the old
+   sidebar-tucked toggle buttons — visible on every screen size) */
+.filter-pill {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1rem; border-radius: 9999px;
+    font-size: 0.78rem; font-weight: 600; color: #fff;
+    white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+@media (min-width: 640px) {
+    .filter-pill { padding: 0.6rem 1.25rem; }
+}
+.filter-pill:hover { background: rgba(255, 255, 255, 0.08); color: var(--color-orange-light); }
+
+.filter-dropdown {
+    position: absolute; top: calc(100% + 10px); left: 50%;
+    transform: translateX(-50%) translateY(-8px) scale(0.96);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 60;
+}
+.filter-dropdown.is-open { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0) scale(1); }
+
+#profile-dropdown.is-open { opacity: 1 !important; pointer-events: auto !important; transform: translateY(0) scale(1) !important; }
+
+#search-overlay { transition: opacity 0.3s ease, transform 0.3s ease; }
+#search-overlay.hidden { display: none; }
+#search-overlay.is-visible { opacity: 1; }
+
+/* Section heading accent */
+.section-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.75rem; height: 1.75rem; border-radius: 0.5rem;
+    background: rgba(255, 106, 26, 0.15); color: var(--color-orange-light); flex-shrink: 0;
+}
+
+/* Focus ring for aspect boxes */
+.aspect-poster { aspect-ratio: 2 / 3; }
+
+/* Clears the sticky mobile top bar when smooth-scrolling to results after a filter pick */
+#grid-section { scroll-margin-top: 4.5rem; }
+
+/* -----------------------------------------------------------------
+   Watch Page — four independent sections, each internally split
+   into a wide left column and a narrower right rail on desktop,
+   stacking to one column on mobile/tablet.
+   ----------------------------------------------------------------- */
+.watch-section { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+@media (min-width: 1024px) {
+    .watch-section--player  { grid-template-columns: 1fr 320px; }
+    .watch-section--info    { grid-template-columns: 1fr 340px; }
+    .watch-section--social  { grid-template-columns: 1fr 320px; }
+}
+
+/* Player */
+.player-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.player-frame iframe { width: 100%; height: 100%; border: 0; }
+.player-play-btn { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.player-play-btn:hover { transform: scale(1.08); box-shadow: 0 0 40px rgba(255, 106, 26, 0.5); }
+
+/* Inline notice (Watch Full Movie / Download placeholders) */
+.watch-notice { transition: opacity 0.25s ease, transform 0.25s ease; }
+.watch-notice.hidden { display: none; }
+
+/* Episode / collection-part switcher (Section 1 right rail) */
+.episode-item {
+    display: flex; gap: 0.75rem; align-items: center;
+    padding: 0.6rem; border-radius: 0.85rem;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+.episode-item:hover { background: rgba(255, 255, 255, 0.05); }
+.episode-item.is-active {
+    background: rgba(255, 106, 26, 0.12);
+    border-color: rgba(255, 106, 26, 0.35);
+}
+.episode-thumb {
+    width: 4.5rem; height: 2.7rem; flex-shrink: 0; border-radius: 0.5rem;
+    overflow: hidden; background: linear-gradient(160deg, #2a2833, #14131a);
+}
+.episode-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Info grid (Section 2 left — status/language/release facts) */
+.info-fact { padding: 0.65rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.info-fact:last-child { border-bottom: none; }
+
+/* Cast */
+.cast-card { transition: transform 0.25s ease; }
+.cast-card:hover { transform: translateY(-3px); }
+.cast-avatar-fallback { background: linear-gradient(160deg, #2a2833, #14131a); }
+
+/* Comments */
+.comment-item { animation: fadeInUp 0.35s ease; }
+.comment-avatar { background: linear-gradient(135deg, var(--color-orange), var(--color-orange-light)); }
+
+/* Owner / site profile card (Section 3 right rail) */
+.owner-avatar-ring {
+    background: conic-gradient(from 180deg, var(--color-orange), var(--color-orange-light), var(--color-orange));
+    animation: ownerSpin 8s linear infinite;
+}
+@keyframes ownerSpin { to { transform: rotate(360deg); } }
+
+/* Scroll-reveal, used across the watch page sections */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ============================================================
+   AUTH PAGES (Login / Sign Up)
+   Same split-panel composition as the reference design, recolored
+   entirely to CineNova's existing dark theme + orange accent — no
+   colors outside the site's existing palette are introduced.
+   The whole page is locked to the viewport (no page-level scroll),
+   and both inner panels use invisible-scrollbar overflow as a
+   safety net for very short viewports, so nothing is ever clipped
+   and no scrollbar is ever visible.
+   ============================================================ */
+html.auth-html, body.auth-page {
+    height: 100%;
+    overflow: hidden;
+}
+.auth-shell {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.5rem, 2.5vh, 1.5rem);
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse 60% 50% at 15% 10%, rgba(255, 106, 26, 0.10), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 100% 100%, rgba(255, 106, 26, 0.06), transparent 60%),
+        #050505;
+}
+.auth-card-outer {
+    width: 100%;
+    max-width: 1120px;
+    height: 100%;
+    max-height: 780px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 30px 90px -20px rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    background: #0a0a0a;
+    animation: fadeInUp 0.6s ease;
+}
+@media (min-width: 1024px) {
+    .auth-card-outer { display: grid; grid-template-columns: 1.05fr 1fr; }
+}
+
+/* Mobile (flex column): brand panel keeps its natural compact
+   height; the form panel takes whatever space remains and — only
+   if content still doesn't fit — scrolls internally rather than
+   ever being clipped or forcing the page itself to scroll.
+   Desktop (grid, see above): both panels stretch to the full card
+   height as normal grid columns. */
+.auth-panel-brand { flex: 0 0 auto; }
+.auth-panel-form { flex: 1 1 auto; }
+
+/* Both panels: never show a scrollbar while doing it. */
+.auth-panel-brand,
+.auth-panel-form {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.auth-panel-brand::-webkit-scrollbar,
+.auth-panel-form::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+.auth-panel-brand {
+    position: relative;
+    background: linear-gradient(165deg, #0c0c0c 0%, #050505 70%);
+    padding: clamp(1.1rem, 3.5vh, 2rem) clamp(1.25rem, 3vw, 2.25rem);
+    display: flex;
+    flex-direction: column;
+}
+@media (min-width: 1024px) {
+    .auth-panel-brand { clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%); padding-right: 3.75rem; }
+}
+.auth-panel-form {
+    background: #0d0d0d;
+    padding: clamp(1.1rem, 3.5vh, 2rem) clamp(1.25rem, 3vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.auth-form-card {
+    width: 100%;
+    max-width: 380px;
+    margin: auto 0;
+}
+.auth-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-orange-light);
+}
+.auth-feature-row { display: flex; align-items: flex-start; gap: 0.75rem; }
+.auth-feature-icon {
+    width: 2.3rem; height: 2.3rem;
+    border-radius: 9999px;
+    background: rgba(255, 106, 26, 0.14);
+    border: 1px solid rgba(255, 106, 26, 0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--color-orange-light);
+    flex-shrink: 0;
+}
+.auth-input-wrap { position: relative; }
+.auth-input {
+    width: 100%;
+    border-radius: 0.85rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: clamp(0.55rem, 1.5vh, 0.7rem) 2.6rem clamp(0.55rem, 1.5vh, 0.7rem) 0.9rem;
+    font-size: 0.85rem;
+    color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.auth-input::placeholder { color: rgba(255, 255, 255, 0.28); }
+.auth-input:focus {
+    outline: none;
+    border-color: var(--color-orange);
+    box-shadow: 0 0 0 3px rgba(255, 106, 26, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+}
+.auth-input-icon {
+    position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+}
+.auth-submit-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(to right, var(--color-orange), #e55a2b);
+    color: #fff; font-weight: 700; font-size: 0.88rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.auth-submit-btn:hover { transform: translateY(-1px) scale(1.02); box-shadow: 0 12px 30px -8px rgba(255, 106, 26, 0.55); }
+.auth-social-btn {
+    display: flex; align-items: center; justify-content: center;
+    height: clamp(2.15rem, 5.5vh, 2.6rem); border-radius: 0.85rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.auth-social-btn:hover { background: rgba(255, 255, 255, 0.09); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+.auth-divider { display: flex; align-items: center; gap: 0.75rem; color: rgba(255, 255, 255, 0.3); font-size: 0.7rem; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+.auth-check {
+    width: 1.05rem; height: 1.05rem; border-radius: 0.3rem;
+    accent-color: var(--color-orange);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Cinematic poster marquee — desktop-only ("if space allows"),
+   sits behind the brand panel's text as a subtle moving backdrop.
+   Never shown on mobile so it can't crowd or hide the form. */
+.auth-poster-marquee {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 0.65rem;
+    padding: 0;
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+}
+.auth-poster-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    animation: posterScrollUp 46s linear infinite;
+    will-change: transform;
+}
+.auth-poster-col--down { animation-name: posterScrollDown; animation-duration: 52s; }
+.auth-poster-col--slow { animation-duration: 60s; }
+.auth-poster-card {
+    border-radius: 0.65rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+.auth-poster-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@keyframes posterScrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+@keyframes posterScrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+.auth-poster-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(165deg, rgba(5, 5, 5, 0.90) 0%, rgba(5, 5, 5, 0.72) 45%, rgba(5, 5, 5, 0.94) 100%);
+}
+.auth-panel-content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
+@media (prefers-reduced-motion: reduce) {
+    .auth-poster-col { animation: none; }
+}
+
+/* ============================================================
+   Search results — card entrance animation + skeleton loading
+   ============================================================ */
+.reveal-card {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    animation: cardRevealIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes cardRevealIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+/* Stagger each card slightly so a results grid animates in as a wave, not all at once. */
+.reveal-card:nth-child(1) { animation-delay: 0.02s; }
+.reveal-card:nth-child(2) { animation-delay: 0.05s; }
+.reveal-card:nth-child(3) { animation-delay: 0.08s; }
+.reveal-card:nth-child(4) { animation-delay: 0.11s; }
+.reveal-card:nth-child(5) { animation-delay: 0.14s; }
+.reveal-card:nth-child(6) { animation-delay: 0.17s; }
+.reveal-card:nth-child(7) { animation-delay: 0.2s; }
+.reveal-card:nth-child(8) { animation-delay: 0.23s; }
+.reveal-card:nth-child(n+9) { animation-delay: 0.25s; }
+
+.search-skeleton-card { border-radius: 0.75rem; overflow: hidden; }
+.search-skeleton-card .skeleton-box { width: 100%; height: 100%; border-radius: 0.75rem; }
+
+.search-empty-state {
+    grid-column: 1 / -1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1rem;
+    animation: fadeInUp 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-card { animation: none; opacity: 1; transform: none; }
+}
+
+
+/* ============================================================
+   CineNova homepage premium refresh
+   ============================================================ */
+.hero-cinema {
+    isolation: isolate;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
+    background: #030303;
+}
+.hero-bg-shade {
+    background:
+        radial-gradient(circle at 50% 42%, rgba(255,106,26,.13), transparent 34%),
+        linear-gradient(180deg, rgba(0,0,0,.54) 0%, rgba(0,0,0,.30) 42%, rgba(3,3,3,.94) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.20) 50%, rgba(0,0,0,.72));
+}
+.hero-content-panel {
+    padding: 1rem 1rem 1.5rem;
+    border-radius: 2rem;
+    background: radial-gradient(circle at center, rgba(0,0,0,.26), rgba(0,0,0,.04) 68%, transparent);
+}
+.hero-cta-compact {
+    box-shadow: 0 10px 28px -14px rgba(255,106,26,.9);
+    padding: .55rem .9rem !important;
+    font-size: .78rem !important;
+}
+.hero-poster-marquee {
+    overflow: hidden;
+    opacity: .34;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+    transform: rotate(-3deg) scale(1.10);
+}
+.hero-poster-row {
+    position: absolute;
+    left: -4%;
+    width: 108%;
+    display: flex;
+    gap: 1rem;
+    will-change: transform;
+}
+.hero-poster-row--one { top: 7%; animation: heroPosterMove 42s linear infinite; }
+.hero-poster-row--two { top: 52%; animation: heroPosterMoveReverse 50s linear infinite; }
+.hero-poster {
+    flex: 0 0 clamp(110px, 11vw, 185px);
+    aspect-ratio: 2 / 3;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.11);
+    box-shadow: 0 18px 40px rgba(0,0,0,.62);
+}
+.hero-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@keyframes heroPosterMove { from { transform: translateX(0); } to { transform: translateX(-42%); } }
+@keyframes heroPosterMoveReverse { from { transform: translateX(-42%); } to { transform: translateX(0); } }
+
+/* -----------------------------------------------------------------
+   Meet the Developer — compact premium profile card
+   ----------------------------------------------------------------- */
+.developer-eyebrow {
+    display: inline-flex; align-items: center; gap: .45rem;
+    color: var(--color-orange-light); text-transform: uppercase; letter-spacing: .18em;
+    font-size: .62rem; font-weight: 800;
+}
+.developer-eyebrow::before, .developer-eyebrow::after {
+    content: ''; width: 20px; height: 1px; background: rgba(255,106,26,.55);
+}
+.developer-card {
+    position: relative; overflow: hidden; display: grid;
+    grid-template-columns: minmax(185px, 252px) minmax(0, 1fr);
+    max-width: 648px; min-height: 0; margin: 0 auto;
+    border: 1px solid rgba(255,106,26,.32); border-radius: 1.2rem;
+    background:
+        radial-gradient(circle at 10% 50%, rgba(255,106,26,.10), transparent 30%),
+        linear-gradient(135deg, #101010 0%, #050505 58%, #0b0b0b 100%);
+    box-shadow: 0 20px 55px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.04);
+    transition: transform .4s ease, box-shadow .4s ease, border-color .4s ease;
+}
+.developer-card::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(120deg, transparent 20%, rgba(255,106,26,.07) 50%, transparent 80%);
+    transform: translateX(-100%); transition: transform .8s ease;
+}
+.developer-card:hover { transform: translateY(-3px); border-color: rgba(255,106,26,.48); box-shadow: 0 26px 65px rgba(0,0,0,.66), 0 0 38px rgba(255,106,26,.08); }
+.developer-card:hover::before { transform: translateX(100%); }
+.developer-photo-column {
+    padding: .72rem; display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.developer-photo-wrap { position: relative; width: min(100%, 215px); display:flex; align-items:center; justify-content:center; }
+.developer-photo-frame {
+    position: relative; width: 100%; height: 261px; padding: 4px; border-radius: 1rem;
+    background: linear-gradient(145deg, #ffb15d, #ff6a1a 38%, #7a2606 100%);
+    box-shadow: 0 0 28px rgba(255,106,26,.20); overflow: hidden;
+}
+.developer-photo { width: 100%; height: 100%; object-fit: cover; object-position: center; display:block; border-radius: .8rem; filter:saturate(1.05) contrast(1.03); }
+.developer-photo-glow { position:absolute; inset:5px; border-radius:.8rem; box-shadow:inset 0 0 30px rgba(255,106,26,.16); pointer-events:none; }
+.developer-photo-badge { position:absolute; right:-.35rem; bottom:-.35rem; width:1.95rem; height:1.95rem; border-radius:999px; display:flex; align-items:center; justify-content:center; background:#ff6a1a; border:3px solid #090909; box-shadow:0 7px 20px rgba(255,106,26,.42); }
+.developer-info { padding: 1rem 1rem 1rem .25rem; display:flex; flex-direction:column; justify-content:center; min-width:0; }
+.developer-name-row { display:flex; align-items:flex-start; justify-content:space-between; gap:.6rem; border-bottom:1px solid rgba(255,106,26,.26); padding:0 0 .7rem .55rem; }
+.developer-kicker { color:#f4f4f4; font-size:.68rem; font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+.developer-kicker span { color:var(--color-orange); }
+.developer-name-row h3 { margin-top:.2rem; color:#fff; font-size:clamp(1.65rem,3.1vw,2.45rem); line-height:.95; letter-spacing:-.04em; font-weight:800; }
+.developer-name-row h3 strong { color:var(--color-orange); }
+.developer-crown { color:var(--color-orange); font-size:1.65rem; line-height:1; filter:drop-shadow(0 0 9px rgba(255,106,26,.35)); }
+.developer-facts { display:grid; gap:.42rem; margin-top:.72rem; }
+.developer-fact {
+    display:grid; grid-template-columns:2.45rem minmax(0,1fr) auto; align-items:center; gap:.65rem;
+    min-height:54px; padding:.5rem .65rem; border:1px solid rgba(255,106,26,.20); border-radius:.75rem;
+    background:rgba(0,0,0,.28); transition:transform .25s ease, background .25s ease, border-color .25s ease;
+}
+.developer-fact:hover { transform:translateX(3px); background:rgba(255,106,26,.055); border-color:rgba(255,106,26,.44); }
+.developer-fact-icon { width:2.2rem; height:2.2rem; display:flex; align-items:center; justify-content:center; color:var(--color-orange); border-right:1px solid rgba(255,106,26,.30); }
+.developer-fact div span { display:block; color:#777; font-size:.56rem; text-transform:uppercase; letter-spacing:.11em; font-weight:700; }
+.developer-fact div strong { display:block; color:#f5f5f5; font-size:.94rem; margin-top:.08rem; }
+.developer-flag { font-size:1.25rem; }
+.developer-fact-mini { color:#ff7b35; font-size:.62rem; font-weight:800; letter-spacing:.08em; }
+.developer-bottom-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(170px,1.05fr); gap:.42rem; margin-top:.42rem; align-items:stretch; }
+.developer-description-inline { min-height:54px; padding:.55rem .7rem .55rem 1.8rem; border:1px solid rgba(255,106,26,.20); border-radius:.75rem; background:rgba(0,0,0,.28); position:relative; display:flex; align-items:center; }
+.developer-description-inline p { margin:0; color:#dcdcdc; font-size:.67rem; line-height:1.35; }
+.developer-description-mark { position:absolute; left:.62rem; top:.28rem; color:var(--color-orange); font-size:1.35rem; font-weight:800; line-height:1; opacity:.9; }
+
+@media (max-width: 900px) {
+    .developer-card { width: min(90%, 920px); max-width: 920px; grid-template-columns: 225px minmax(0,1fr); }
+    .developer-photo-frame { height: 275px; }
+    .developer-photo-wrap { width:min(100%, 195px); }
+        .developer-info { padding:.85rem .85rem .85rem .15rem; }
+}
+@media (max-width: 640px) {
+    .developer-card { max-width: 360px; grid-template-columns: 1fr; border-radius:1rem; }
+    .developer-photo-column { padding:.7rem .7rem .45rem; }
+    .developer-photo-wrap { width:min(100%, 185px); }
+    .developer-photo-frame { height:245px; }
+    .developer-bottom-row { grid-template-columns:1fr; }
+.developer-description-inline { min-height:50px; }
+    .developer-photo-badge { right:-.2rem; bottom:-.25rem; }
+    .developer-info { padding:.7rem .7rem .85rem; }
+    .developer-name-row { padding-left:.25rem; }
+    .developer-name-row h3 { font-size:1.9rem; }
+    .developer-fact { grid-template-columns:2.25rem minmax(0,1fr) auto; gap:.55rem; min-height:56px; }
+    .developer-fact-icon { width:2rem; height:2rem; }
+    .developer-fact div strong { font-size:.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-poster-row { animation:none; }
+    .developer-card, .developer-card::before, .developer-fact { transition:none; }
+}
+
+/* Slightly smaller homepage carousel cards; browse-page card dimensions remain unchanged. */
+#track-trending-movies > div, #track-trending-series > div { width: 126px; }
+@media (min-width: 640px) {
+    #track-trending-movies > div, #track-trending-series > div { width: 142px; }
+}
+
+
+
+/* ============================================================
+   CineNova final visual polish — reference-inspired hero + developer
+   ============================================================ */
+.hero-cinema {
+    min-height: 100svh;
+    height: 100svh;
+    position: relative;
+}
+.hero-content-panel {
+    max-width: 680px;
+    padding: 1.15rem 1.25rem 1.45rem;
+    background: radial-gradient(circle at center, rgba(0,0,0,.48), rgba(0,0,0,.18) 58%, transparent 78%);
+    text-shadow: 0 3px 18px rgba(0,0,0,.9);
+}
+.hero-welcome {
+    margin: .85rem auto 0;
+    max-width: 620px;
+    color: #f2f2f2;
+    font-size: clamp(.9rem, 1.55vw, 1.08rem);
+    line-height: 1.45;
+    font-weight: 650;
+}
+.hero-description {
+    margin: .35rem auto 0;
+    max-width: 520px;
+    color: rgba(255,255,255,.66);
+    font-size: clamp(.72rem, 1.2vw, .88rem);
+    line-height: 1.45;
+}
+.hero-cta-compact {
+    padding: .5rem .82rem !important;
+    font-size: .72rem !important;
+    gap: .35rem !important;
+    border-radius: .65rem !important;
+}
+.hero-top-scrim {
+    background: linear-gradient(to bottom, rgba(0,0,0,.32), transparent);
+}
+.hero-poster-marquee {
+    opacity: .24;
+    transform: rotate(-1.5deg) scale(1.16);
+    filter: saturate(.72) brightness(.72);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+}
+.hero-poster-row {
+    gap: .8rem;
+}
+.hero-poster-row--one { top: 4%; animation-duration: 58s; }
+.hero-poster-row--two { top: 55%; animation-duration: 66s; }
+.hero-poster {
+    flex-basis: clamp(115px, 10vw, 165px);
+    border-radius: .7rem;
+    border-color: rgba(255,255,255,.07);
+    box-shadow: 0 16px 34px rgba(0,0,0,.72);
+}
+.hero-cinema::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 42%, transparent 0%, rgba(0,0,0,.08) 40%, rgba(0,0,0,.55) 100%),
+      linear-gradient(180deg, rgba(0,0,0,.2) 0%, transparent 36%, rgba(0,0,0,.78) 100%);
+}
+.hero-cinema > .container { z-index: 20; }
+
+/* Compact developer presentation: photo is ~3/4 of the previous height,
+   with the quote card directly underneath it. */
+.developer-card {
+    width: min(90%, 828px);
+    max-width: 828px;
+    grid-template-columns: minmax(166px, 203px) minmax(0, 1fr);
+}
+.developer-photo-column {
+    padding: .75rem;
+    gap: .65rem;
+    align-items: center;
+}
+.developer-photo-wrap {
+    width: min(100%, 158px);
+}
+.developer-photo-frame {
+    height: 196px;
+    padding: 3px;
+    border-radius: .85rem;
+}
+.developer-photo {
+    border-radius: .68rem;
+}
+.developer-photo-caption {
+    position: relative;
+    width: min(100%, 158px);
+    padding: .72rem .72rem .68rem 1.65rem;
+    border: 1px solid rgba(255,106,26,.28);
+    border-radius: .78rem;
+    background: linear-gradient(145deg, rgba(255,106,26,.09), rgba(0,0,0,.48));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 10px 24px rgba(0,0,0,.28);
+}
+.developer-photo-caption p {
+    margin: 0;
+    color: #dedede;
+    font-size: .64rem;
+    line-height: 1.4;
+}
+.developer-photo-caption strong {
+    display: block;
+    margin-top: .42rem;
+    color: #fff;
+    font-size: .63rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+.developer-photo-caption strong span { color: var(--color-orange); }
+.developer-photo-caption .developer-caption-name {
+    margin-top: .18rem;
+    font-size: .72rem;
+    letter-spacing: .045em;
+    text-transform: none;
+}
+.developer-photo-caption .developer-description-mark {
+    left: .52rem;
+    top: .42rem;
+    font-size: 1.1rem;
+}
+.developer-info { padding: .85rem .85rem .85rem .2rem; }
+.developer-name-row { padding-bottom: .6rem; }
+.developer-name-row h3 { font-size: clamp(1.55rem, 2.8vw, 2.15rem); }
+.developer-facts { margin-top: .58rem; gap: .36rem; }
+.developer-fact { min-height: 50px; padding: .42rem .55rem; }
+.developer-fact div strong { font-size: .88rem; }
+.developer-phone-fact { border-color: rgba(255,106,26,.27); }
+
+@media (max-width: 640px) {
+    .hero-content-panel { padding-left: .7rem; padding-right: .7rem; }
+    .hero-cinema .hero-top-scrim { padding-top: .85rem; }
+    .hero-cinema .hero-top-scrim img { width: 2.25rem; height: 2.25rem; }
+    .hero-cinema .hero-top-scrim .btn-ember { padding: .48rem .78rem; font-size: .72rem; }
+    .hero-poster-marquee { opacity: .18; }
+    .hero-poster-row--one { top: 8%; }
+    .hero-poster-row--two { top: 58%; }
+    .developer-card { width: min(90%, 468px); max-width: 468px; grid-template-columns: 1fr; }
+    .developer-photo-column { padding: .65rem .65rem .45rem; }
+    .developer-photo-wrap,
+    .developer-photo-caption { width: min(100%, 149px); }
+    .developer-photo-frame { height: 185px; }
+    .developer-photo-caption { margin-top: .05rem; }
+    .developer-info { padding: .65rem .65rem .8rem; }
+    .developer-name-row h3 { font-size: 1.75rem; }
+}
+
+/* Footer movie-update feed + admin publisher */
+.cn-footer-updates-wrap {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  border-radius: 14px;
+  padding: 12px;
+  width: 110%;
+  max-width: none;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+.cn-footer-updates-heading {
+  color: rgba(255,255,255,.82);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.cn-footer-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #f97316;
+  box-shadow: 0 0 0 4px rgba(249,115,22,.10);
+  flex: 0 0 auto;
+}
+.cn-footer-update-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.cn-footer-update-item:first-child { border-top: 0; }
+.cn-footer-update-icon {
+  color: #fb923c;
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+.cn-footer-update-message {
+  color: rgba(255,255,255,.78);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.cn-footer-update-title {
+  color: #fb923c;
+  font-size: 10px;
+  margin-top: 2px;
+}
+.cn-footer-update-date {
+  color: rgba(156,163,175,.65);
+  font-size: 9px;
+  margin-top: 2px;
+}
+.cn-footer-admin-composer {
+  border: 1px solid rgba(249,115,22,.20);
+  background: linear-gradient(180deg, rgba(249,115,22,.08), rgba(255,255,255,.025));
+  border-radius: 14px;
+  padding: 11px;
+}
+.cn-footer-update-input {
+  width: 100%;
+  resize: vertical;
+  min-height: 58px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.42);
+  color: #fff;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font-size: 11px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.cn-footer-update-input::placeholder { color: rgba(156,163,175,.62); }
+.cn-footer-update-input:focus {
+  border-color: rgba(249,115,22,.55);
+  box-shadow: 0 0 0 3px rgba(249,115,22,.08);
+}
+.cn-footer-update-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 9px;
+  padding: 8px 11px;
+  color: #fff;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .2s, opacity .2s, box-shadow .2s;
+  box-shadow: 0 8px 18px rgba(249,115,22,.14);
+}
+.cn-footer-update-button:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(249,115,22,.20); }
+.cn-footer-update-button:disabled { opacity: .55; cursor: wait; transform: none; }
+.cn-footer-update-status { color: rgba(156,163,175,.75); font-size: 9px; line-height: 1.35; }
+.cn-footer-update-status.is-success { color: #86efac; }
+.cn-footer-update-status.is-error { color: #fca5a5; }
+
+/* Footer newsletter subscription */
+.cn-footer-newsletter {
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 10px;
+  width: 110%;
+  max-width: none;
+  box-sizing: border-box;
+}
+.cn-footer-newsletter-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255,255,255,.92);
+  font-size: 12px;
+  font-weight: 800;
+}
+.cn-footer-newsletter-icon { color: #f97316; display: inline-flex; }
+.cn-footer-newsletter-copy {
+  color: rgba(156,163,175,.78);
+  font-size: 10px;
+  line-height: 1.45;
+  margin: 4px 0 9px;
+}
+.cn-footer-newsletter-form {
+  display: flex;
+  align-items: stretch;
+  gap: 7px;
+}
+.cn-footer-newsletter-input-wrap { flex: 1 1 auto; min-width: 0; }
+#cn-newsletter-email {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.52);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0 12px;
+  font-size: 11px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+#cn-newsletter-email::placeholder { color: rgba(156,163,175,.62); }
+#cn-newsletter-email:focus {
+  border-color: rgba(249,115,22,.58);
+  box-shadow: 0 0 0 3px rgba(249,115,22,.08);
+}
+#cn-newsletter-button {
+  height: 36px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 13px;
+  color: #fff;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .2s, opacity .2s, box-shadow .2s;
+  box-shadow: 0 8px 18px rgba(249,115,22,.14);
+}
+#cn-newsletter-button:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(249,115,22,.20); }
+#cn-newsletter-button:disabled { opacity: .55; cursor: wait; transform: none; }
+.cn-footer-newsletter-status {
+  display: block;
+  min-height: 12px;
+  margin-top: 6px;
+  color: rgba(156,163,175,.72);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.cn-footer-newsletter-status.is-success { color: #86efac; }
+.cn-footer-newsletter-status.is-error { color: #fca5a5; }
+.cn-footer-honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+@media (max-width: 640px) {
+  .cn-footer-newsletter,
+  .cn-footer-updates-wrap { width: 100%; }
+  .cn-footer-newsletter-form { flex-direction: column; }
+  #cn-newsletter-button { width: 100%; }
+}
+
+/* ============================================================
+   Catalog heroes + centered live-search polish
+   ============================================================ */
+.catalog-hero {
+    min-height: 78vh;
+    isolation: isolate;
+    background: #030303;
+}
+.catalog-hero-bg {
+    opacity: 1;
+    filter: saturate(1.04) contrast(1.03);
+    transform: scale(1.015);
+}
+.catalog-hero-overlay {
+    background:
+        radial-gradient(circle at 50% 38%, rgba(255,106,26,.08), transparent 32%),
+        linear-gradient(180deg, rgba(0,0,0,.24) 0%, rgba(0,0,0,.16) 38%, rgba(3,3,3,.90) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.48), rgba(0,0,0,.10) 52%, rgba(0,0,0,.46));
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+}
+.catalog-hero #hero-content {
+    text-shadow: 0 8px 30px rgba(0,0,0,.72);
+}
+.catalog-hero #hero-desc {
+    text-shadow: 0 4px 18px rgba(0,0,0,.78);
+}
+
+#search-overlay {
+    padding: 1rem;
+    background: rgba(0,0,0,.84);
+}
+#search-overlay > div {
+    width: min(1100px, 96vw);
+    max-width: 1100px;
+    max-height: 92vh;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    border-color: rgba(255,106,26,.18);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255,106,26,.08), transparent 34%),
+        rgba(5,5,5,.92);
+    box-shadow: 0 30px 90px rgba(0,0,0,.72), 0 0 50px rgba(255,106,26,.05);
+}
+#search-overlay #live-search-input {
+    min-height: 54px;
+    padding-left: 1.1rem;
+    padding-right: 3rem;
+    background: rgba(255,255,255,.045);
+    border-color: rgba(255,255,255,.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+}
+#search-overlay #live-search-input:focus {
+    border-color: rgba(255,106,26,.65);
+    box-shadow: 0 0 0 3px rgba(255,106,26,.08);
+}
+#search-overlay #live-results {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+    align-content: start;
+    padding: .25rem;
+}
+#search-overlay #live-results > div {
+    width: 100% !important;
+    min-width: 0;
+}
+#search-overlay #live-results .movie-card {
+    width: 100% !important;
+}
+#search-overlay #live-results > p {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+    #search-overlay #live-results { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+    #search-overlay #live-results { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+}
+@media (max-width: 500px) {
+    .catalog-hero { min-height: 72vh; }
+    #search-overlay { padding: .65rem; }
+    #search-overlay > div { width: 100%; max-height: 94vh; border-radius: 1.25rem; }
+    #search-overlay #live-results { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+}
+
+/* ============================================================
+   Site-wide cinematic background
+   Used on watch.html, movies.html, series.html, new-releases.html
+   and chine.html to match the CineNova Home page's dark, filmic look.
+   Implemented as fixed full-viewport layers so it never affects
+   document flow, existing sections, cards, or scripts.
+   ============================================================ */
+.cinematic-page {
+    position: relative;
+}
+.site-cinematic-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+}
+.site-cinematic-bg__image {
+    position: absolute;
+    inset: -4%;
+    background-image: url('../images/backgrounds/site-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: saturate(.85) brightness(.88) contrast(1.05);
+    transform: scale(1);
+    animation: cinematicBgDrift 34s ease-in-out infinite alternate;
+    will-change: transform;
+}
+/* Layered scrims: vertical read-friendly gradient + soft vignette + brand-orange glow,
+   tuned so text stays sharp over any part of the page while the image stays visible. */
+.site-cinematic-bg__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 18%, rgba(255,106,26,.08), transparent 40%),
+        linear-gradient(180deg, rgba(5,5,5,.62) 0%, rgba(5,5,5,.40) 22%, rgba(5,5,5,.50) 55%, rgba(5,5,5,.72) 100%),
+        radial-gradient(ellipse at center, rgba(5,5,5,.16) 0%, rgba(5,5,5,.58) 100%);
+}
+@keyframes cinematicBgDrift {
+    from { transform: scale(1.02) translate3d(0, 0, 0); }
+    to   { transform: scale(1.12) translate3d(-1%, -1%, 0); }
+}
+
+/* Sections keep their own translucent/blurred backgrounds already —
+   this just makes sure they sit above the fixed cinematic layers. */
+.cinematic-page main,
+.cinematic-page #footer-root,
+.cinematic-page #sidebar-root {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 640px) {
+    .site-cinematic-bg__image {
+        background-image: url('../images/backgrounds/site-bg-mobile.jpg');
+        animation-duration: 44s;
+    }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+    .site-cinematic-bg__image {
+        background-image: url('../images/backgrounds/site-bg-tablet.jpg');
+    }
+}
+@media (min-width: 1920px) {
+    .site-cinematic-bg__image {
+        background-image: url('../images/backgrounds/site-bg-xl.jpg');
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site-cinematic-bg__image { animation: none; transform: scale(1.04); }
+}
+
+/* ============================================================
+   Subtle, professional hover polish — additive only, scoped to
+   elements with no pre-existing hover transform so nothing already
+   shipping (movie cards, thumbs, buttons) is altered or duplicated.
+   ============================================================ */
+.glass-panel {
+    transition: border-color .35s ease, box-shadow .35s ease;
+}
+.glass-panel:hover {
+    box-shadow: 0 20px 48px -20px rgba(0,0,0,.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glass-panel { transition: none; }
+}
+
+/* Now that the cinematic background image reads through more strongly,
+   give text that sits directly over it (no glass-panel / bg-black
+   wrapper behind it) a soft shadow so it stays crisp on any part of
+   the photo. Purely additive — doesn't touch layout or existing classes. */
+.cinematic-page #back-link,
+.cinematic-page #recommended-heading,
+.cinematic-page #recommended-sub {
+    text-shadow: 0 2px 14px rgba(0,0,0,.8), 0 1px 3px rgba(0,0,0,.9);
+}
+
+/* ============================================================
+   Meta pills — premium "info card" chips used for year, rating,
+   runtime, genres, and country (watch page title strip + catalog
+   hero meta rows). Additive classes only; badges keep working even
+   if a class here is missing on an older cached page.
+   ============================================================ */
+.meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .4rem .9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .055);
+    border: 1px solid rgba(255, 255, 255, .10);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    font-weight: 600;
+    font-size: .78rem;
+    line-height: 1;
+    color: #d1d5db;
+    box-shadow: 0 6px 18px -10px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04);
+    transition: transform .3s cubic-bezier(.16,1,.3,1), border-color .3s ease, background .3s ease, box-shadow .3s ease;
+}
+.meta-pill:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 106, 26, .38);
+    background: rgba(255, 255, 255, .09);
+    box-shadow: 0 10px 24px -10px rgba(0,0,0,.7);
+}
+.meta-pill--rating { color: #fbbf24; border-color: rgba(251,191,36,.20); }
+.meta-pill--genre {
+    background: linear-gradient(135deg, rgba(255,106,26,.24), rgba(255,106,26,.07));
+    border-color: rgba(255,106,26,.32);
+    color: #ffbb87;
+}
+.meta-pill--genre:hover { border-color: rgba(255,106,26,.6); }
+.meta-pill--country { color: #d1d5db; }
+
+@media (max-width: 480px) {
+    .meta-pill { padding: .32rem .72rem; font-size: .72rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .meta-pill { transition: none; }
+    .meta-pill:hover { transform: none; }
+}
+
+/* ============================================================
+   Watch page — tabbed details card (Description / Cast / Comments
+   / Site Owner). Only one panel is shown at a time; switching is
+   handled in watch.js by toggling data-tab-panel visibility and
+   the .is-active state on the matching data-tab-target button.
+   ============================================================ */
+.watch-tabs-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+.watch-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .65rem 1.15rem;
+    border-radius: .9rem;
+    font-size: .84rem;
+    font-weight: 700;
+    color: #9ca3af;
+    background: transparent;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color .25s ease, background .25s ease, border-color .25s ease, transform .25s ease;
+}
+.watch-tab:hover { color: #e5e7eb; background: rgba(255,255,255,.05); }
+.watch-tab.is-active {
+    color: #fff;
+    background: linear-gradient(135deg, rgba(255,106,26,.85), rgba(255,106,26,.65));
+    border-color: rgba(255,106,26,.9);
+    box-shadow: 0 8px 22px -10px rgba(255,106,26,.55);
+}
+.watch-tab-sub {
+    font-size: .68rem;
+    font-weight: 600;
+    opacity: .75;
+}
+.watch-tab-count {
+    font-size: .7rem;
+    font-weight: 700;
+    padding: .05rem .4rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.10);
+}
+.watch-tab.is-active .watch-tab-count { background: rgba(0,0,0,.25); }
+
+.watch-tab-panel { animation: watchTabFadeIn .35s ease; }
+@keyframes watchTabFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .watch-tab, .watch-tab-panel { animation: none; transition: none; }
+}
+@media (max-width: 640px) {
+    .watch-tabs-card { gap: .3rem; }
+    .watch-tab { padding: .55rem .85rem; font-size: .76rem; flex: 1 1 auto; justify-content: center; }
+}
+
+/* Popular Movies — compact sidebar list (right rail) */
+.popular-item {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .55rem;
+    border-radius: .9rem;
+    border: 1px solid transparent;
+    transition: background .25s ease, border-color .25s ease, transform .25s ease;
+}
+.popular-item:hover { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.08); transform: translateX(2px); }
+.popular-item-rank {
+    flex-shrink: 0;
+    width: 1.6rem;
+    text-align: center;
+    font-weight: 800;
+    font-size: .95rem;
+    font-style: italic;
+    color: rgba(255,106,26,.55);
+}
+.popular-item-thumb {
+    flex-shrink: 0;
+    width: 2.75rem;
+    aspect-ratio: 2 / 3;
+    border-radius: .55rem;
+    overflow: hidden;
+    background: linear-gradient(160deg, #2a2833, #14131a);
+}
+.popular-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ============================================================
+   Recommended — richer info card (poster + metadata block) used
+   below the main watch content. Falls back gracefully when a
+   field (e.g. genres) isn't available for a given title.
+   ============================================================ */
+.rec-card {
+    display: flex;
+    gap: 1rem;
+    padding: .85rem;
+    border-radius: 1.1rem;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), border-color .3s ease, box-shadow .3s ease, background .3s ease;
+}
+.rec-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,106,26,.30);
+    box-shadow: 0 16px 34px -16px rgba(0,0,0,.65);
+    background: rgba(255,255,255,.03);
+}
+.rec-card-poster {
+    flex-shrink: 0;
+    width: clamp(72px, 20vw, 92px);
+    aspect-ratio: 2 / 3;
+    border-radius: .75rem;
+    overflow: hidden;
+    background: linear-gradient(160deg, #2a2833, #14131a);
+}
+.rec-card-poster img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.rec-card:hover .rec-card-poster img { transform: scale(1.06); }
+.rec-card-body { min-width: 0; display: flex; flex-direction: column; }
+.rec-card-title {
+    font-size: .92rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.rec-card-meta { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
+
+@media (max-width: 480px) {
+    .rec-card { padding: .65rem; gap: .75rem; }
+    .rec-card-title { font-size: .84rem; }
+}
+
+/* ============================================================
+   Watch page — equal-height cards. Description/Cast/Comments/
+   Site Owner (one shared container, panels swapped by JS) and the
+   Popular Movies sidebar all use the same fixed height with an
+   internal scroll body, so the two columns line up perfectly and
+   never jump around when a panel's content is longer than the box.
+   ============================================================ */
+.watch-tabs-content,
+.watch-side-card {
+    display: flex;
+    flex-direction: column;
+    height: 392px; /* was 560px — reduced 30% */
+}
+.watch-scroll-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: .5rem;
+}
+/* Explicit .hidden override — guards against source-order specificity
+   ties with Tailwind's own .hidden utility, since panels here also
+   carry layout classes. */
+.watch-tab-panel.hidden { display: none; }
+
+/* Thin, on-brand scrollbar for the scroll bodies above (and reusable
+   anywhere else a scrollable panel wants it). Falls back to the
+   browser default where unsupported — never breaks scrolling. */
+.cn-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,106,26,.4) transparent; }
+.cn-scroll::-webkit-scrollbar { width: 6px; }
+.cn-scroll::-webkit-scrollbar-track { background: transparent; }
+.cn-scroll::-webkit-scrollbar-thumb { background: rgba(255,106,26,.4); border-radius: 999px; }
+.cn-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,106,26,.65); }
+
+@media (max-width: 900px) {
+    .watch-tabs-content, .watch-side-card { height: 336px; /* was 480px — reduced 30% */ }
+}
+
+/* ============================================================
+   Watch page — modern pill "Back" button. Keeps the same anchor
+   element/ids the page script updates (href + label); this only
+   changes its visual treatment.
+   ============================================================ */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .35rem 1.1rem .35rem .35rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.10);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: #e5e7eb;
+    font-size: .82rem;
+    font-weight: 600;
+    transition: background .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
+}
+.back-button:hover {
+    background: rgba(255,106,26,.12);
+    border-color: rgba(255,106,26,.4);
+    color: #fff;
+    transform: translateX(-2px);
+}
+.back-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    flex-shrink: 0;
+    transition: background .3s ease, transform .3s ease;
+}
+.back-button:hover .back-button-icon { background: rgba(255,106,26,.9); transform: translateX(-2px); }
+@media (prefers-reduced-motion: reduce) {
+    .back-button, .back-button-icon { transition: none; }
+    .back-button:hover, .back-button:hover .back-button-icon { transform: none; }
+}
+
+/* ============================================================
+   Player "now playing" badge — dark rounded label overlaid on the
+   top-left corner of the video frame, e.g. "Lioness 2023 · S01 E01".
+   Purely decorative (pointer-events: none) so it never blocks the
+   play button or the iframe underneath.
+   ============================================================ */
+.player-caption-badge {
+    position: absolute;
+    top: .85rem;
+    left: .85rem;
+    z-index: 5;
+    max-width: calc(100% - 1.7rem);
+    padding: .5rem .9rem;
+    border-radius: .85rem;
+    background: rgba(8,8,8,.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.08);
+    font-size: .82rem;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+@media (max-width: 480px) {
+    .player-caption-badge { font-size: .72rem; padding: .4rem .7rem; top: .6rem; left: .6rem; }
+}
+
+/* ============================================================
+   Full Cast grid — compact cards (roughly half the previous size)
+   so more of the cast fits inside the shorter tab card before
+   scrolling kicks in.
+   ============================================================ */
+/* ============================================================
+   Full Cast grid — compact cards (roughly half the previous size)
+   so more of the cast fits inside the shorter tab card before
+   scrolling kicks in. Plain CSS grid (not Tailwind utilities) so
+   the column count adapts smoothly at any width without depending
+   on specific breakpoint classes being present in the compiled
+   Tailwind build.
+   ============================================================ */
+.cast-grid-sm {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: .65rem;
+}
+.cast-card-sm .cast-avatar-fallback { border-radius: .6rem; }
+.cast-card-sm p { line-height: 1.2; }

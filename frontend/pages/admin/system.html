@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('system', 'System', 'Server and environment health').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML = '<div class="admin-panel"><div class="admin-panel-head"><span class="admin-panel-title">Environment</span></div><div class="admin-table-wrap"><table class="admin-table"><tbody id="table-body"></tbody></table></div></div>';
+
+            function row(label, ok, text) {
+                const badge = typeof ok === 'boolean'
+                    ? '<span class="admin-badge admin-badge--' + (ok ? 'active' : 'suspended') + '">' + (ok ? 'OK' : 'Missing') + '</span>'
+                    : '';
+                return '<tr><td class="admin-cell-title" style="width:280px">' + label + '</td><td>' + (text || '') + ' ' + badge + '</td></tr>';
+            }
+
+            CNAdmin.get('../../../backend/api/admin/dashboard.php?view=system').then(function (res) {
+                const s = res.data;
+                document.getElementById('table-body').innerHTML =
+                    row('PHP Version', null, s.php_version) +
+                    row('Server Software', null, s.server_software) +
+                    row('OS', null, s.os) +
+                    row('Memory Limit', null, s.memory_limit) +
+                    row('Upload Max Filesize', null, s.upload_max_filesize) +
+                    row('Post Max Size', null, s.post_max_size) +
+                    row('cURL (TMDB requests)', s.curl_enabled) +
+                    row('TMDB API Key Configured', s.tmdb_api_key_set) +
+                    row('ffprobe (video duration probing)', s.ffprobe_available) +
+                    row('Database Connection', s.db_connected) +
+                    row('Storage Directory Writable', s.storage_writable) +
+                    row('Uploads Directory Writable', s.uploads_writable);
+            });
+        });
+    </script>
+</body>
+</html>

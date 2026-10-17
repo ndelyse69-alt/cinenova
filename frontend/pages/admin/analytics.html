@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('analytics', 'Analytics', 'Traffic over the last 30 days').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-stats-grid" id="stats-grid"></div>' +
+                '<div class="admin-panel"><div class="admin-panel-head"><span class="admin-panel-title">Top Pages</span></div>' +
+                '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Path</th><th>Visits</th></tr></thead><tbody id="pages-body"></tbody></table></div></div>';
+
+            CNAdmin.get('../../../backend/api/admin/dashboard.php?view=analytics&days=30').then(function (res) {
+                const d = res.data;
+                const stats = [
+                    { icon: 'chart', label: 'Total Visits (30d)', value: d.total_visits },
+                    { icon: 'users', label: 'Unique Visitors', value: d.unique_ip_hashes },
+                    { icon: 'devices', label: 'Devices Tracked', value: Object.keys(d.by_device || {}).length },
+                ];
+                document.getElementById('stats-grid').innerHTML = stats.map((s) =>
+                    '<div class="admin-stat-card"><div><p class="admin-stat-value">' + s.value + '</p><p class="admin-stat-label">' + s.label + '</p></div>' +
+                    '<div class="admin-stat-icon">' + cnIcon(s.icon, 'w-5 h-5') + '</div></div>'
+                ).join('');
+
+                const pages = Object.entries(d.top_pages || {});
+                document.getElementById('pages-body').innerHTML = pages.length
+                    ? pages.map(([path, count]) => '<tr><td class="admin-cell-title">' + CNAdmin.esc(path) + '</td><td>' + count + '</td></tr>').join('')
+                    : '<tr><td colspan="2" class="admin-table-empty">No traffic recorded yet.</td></tr>';
+            });
+        });
+    </script>
+</body>
+</html>

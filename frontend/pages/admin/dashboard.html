@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('dashboard', 'Dashboard', 'Overview of your library and traffic').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-stats-grid" id="stats-grid"></div>' +
+                '<div class="admin-panel">' +
+                    '<div class="admin-panel-head"><span class="admin-panel-title">Recently Added</span></div>' +
+                    '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Title</th><th>Type</th></tr></thead><tbody id="recent-body"></tbody></table></div>' +
+                '</div>';
+
+            CNAdmin.get('../../../backend/api/admin/dashboard.php?view=summary').then(function (res) {
+                const d = res.data;
+                const stats = [
+                    { icon: 'film', label: 'Total Titles', value: d.total_titles },
+                    { icon: 'grid', label: 'Movies', value: d.movie_count },
+                    { icon: 'tv', label: 'Series', value: d.series_count },
+                    { icon: 'users', label: 'Users', value: d.total_users },
+                    { icon: 'tag', label: 'Categories', value: d.total_categories },
+                    { icon: 'globe', label: 'Countries', value: d.total_countries },
+                    { icon: 'eye', label: "Visits Today", value: d.visits_today },
+                    { icon: 'chart', label: 'Total Visits', value: d.visits_total },
+                ];
+                document.getElementById('stats-grid').innerHTML = stats.map((s) =>
+                    '<div class="admin-stat-card"><div><p class="admin-stat-value">' + s.value + '</p><p class="admin-stat-label">' + s.label + '</p></div>' +
+                    '<div class="admin-stat-icon">' + cnIcon(s.icon, 'w-5 h-5') + '</div></div>'
+                ).join('');
+
+                const body = document.getElementById('recent-body');
+                body.innerHTML = (d.recent_titles || []).length
+                    ? d.recent_titles.map((t) =>
+                        '<tr><td class="admin-cell-title">' + CNAdmin.esc(t.title) + '</td><td><span class="admin-badge admin-badge--' + t.media_type + '">' + (t.media_type === 'tv' ? 'Series' : 'Movie') + '</span></td></tr>'
+                      ).join('')
+                    : '<tr><td colspan="2" class="admin-table-empty">No titles yet — add one from Movies & Series.</td></tr>';
+            });
+        });
+    </script>
+</body>
+</html>

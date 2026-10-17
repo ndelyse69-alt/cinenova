@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="doc-title">Watch — CineNova</title>
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://api.themoviedb.org">
+    <link rel="preconnect" href="https://image.tmdb.org">
+    <link rel="preconnect" href="https://www.youtube.com">
+</head>
+<body class="cinematic-page">
+    <div class="site-cinematic-bg" aria-hidden="true">
+        <div class="site-cinematic-bg__image"></div>
+        <div class="site-cinematic-bg__scrim"></div>
+    </div>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div id="sidebar-root"></div>
+
+    <main id="main-content">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-16">
+
+            <!-- ============ TITLE STRIP ============ -->
+            <div class="reveal mb-7 relative z-30">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <a href="movies.html" id="back-link" class="back-button">
+                        <span class="back-button-icon"><span id="icon-back"></span></span> <span id="back-label">Back to Movies</span>
+                    </a>
+
+                    <div class="relative w-full max-w-[190px] sm:max-w-[240px] flex-shrink-0" id="watch-search-wrap">
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" id="icon-search"></span>
+                            <input type="text" id="watch-search-input" autocomplete="off" placeholder="Search movies & series…"
+                                   class="w-full bg-white/5 border border-white/10 rounded-full pl-9 pr-8 py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 focus:bg-white/10 transition-colors">
+                            <svg id="watch-search-loader" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-orange-400 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        </div>
+                        <div id="watch-search-dropdown" class="hidden absolute right-0 mt-2 w-[85vw] max-w-[340px] max-h-[420px] overflow-y-auto hide-scrollbar bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 p-2"></div>
+                    </div>
+                </div>
+
+                <!-- Movie info card -->
+                <div class="glass-panel rounded-2xl p-5 sm:p-6 watch-title-card">
+                    <h1 id="watch-title" class="text-2xl sm:text-3xl font-extrabold text-white leading-tight"></h1>
+                    <div id="watch-meta" class="flex flex-wrap items-center gap-2 mt-3 text-xs"></div>
+                </div>
+            </div>
+
+            <!-- ============ SECTION 1 — PLAYER + EPISODES/PARTS ============ -->
+            <section class="watch-section watch-section--player reveal glass-panel rounded-3xl p-4 sm:p-6 lg:p-8">
+                <div>
+                    <div id="player-frame" class="player-frame">
+                        <img id="player-poster-img" src="" alt="" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/35"></div>
+                        <div id="player-caption-badge" class="player-caption-badge hidden"></div>
+                        <button type="button" data-play-trailer class="player-play-btn absolute inset-0 m-auto h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 flex items-center justify-center shadow-2xl shadow-orange-500/40" aria-label="Play trailer">
+                            <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white ml-1" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="mt-4 min-h-[2.5rem]">
+                        <p id="player-caption-title" class="text-sm font-semibold text-white"></p>
+                        <p id="player-caption-overview" class="text-xs text-gray-400 mt-0.5 leading-relaxed"></p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-white/5">
+                        <button type="button" data-play-trailer class="btn-ember px-6 py-3 rounded-full text-sm font-semibold flex items-center gap-2" id="btn-trailer"></button>
+                        <button type="button" data-watch-full class="btn-ghost px-6 py-3 rounded-full text-sm font-semibold flex items-center gap-2" id="btn-watch-full"></button>
+                        <button type="button" data-download class="btn-ghost px-6 py-3 rounded-full text-sm font-semibold flex items-center gap-2 hidden" id="btn-download" aria-hidden="true"></button>
+                    </div>
+
+                    <div aria-live="polite">
+                        <p id="trailer-notice" class="watch-notice hidden mt-4 text-sm text-gray-400 bg-white/5 border border-white/10 rounded-xl px-4 py-3">No official trailer is on file for this title yet.</p>
+                        <p id="full-movie-notice" class="watch-notice hidden mt-4 text-sm text-gray-400 bg-white/5 border border-white/10 rounded-xl px-4 py-3">Full playback is temporarily unavailable for this title. The external player may be unavailable.</p>
+                        <p id="download-notice" class="watch-notice hidden mt-4 text-sm text-gray-400 bg-white/5 border border-white/10 rounded-xl px-4 py-3">This title does not have a downloadable video file. Download is available when the site owner provides a direct video file (such as an uploaded MP4 or an authorized direct video URL).</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-black/30 border border-white/5 p-5">
+                    <h2 id="switcher-heading" class="text-xs font-bold uppercase tracking-wide text-white/80 mb-4"></h2>
+                    <div id="switcher-list" class="flex flex-col gap-1 max-h-[440px] overflow-y-auto hide-scrollbar pr-1"></div>
+                </div>
+            </section>
+
+            <!-- ============ SECTION 2 — DETAILS TABS + POPULAR SIDEBAR ============ -->
+            <section class="watch-section watch-section--info reveal mt-14">
+                <div>
+                    <!-- Tab navigation card -->
+                    <div class="glass-panel rounded-2xl p-2 watch-tabs-card" role="tablist" aria-label="Movie details">
+                        <button type="button" class="watch-tab is-active" data-tab-target="description" role="tab" aria-selected="true">
+                            <span id="icon-tab-description"></span> Description
+                        </button>
+                        <button type="button" class="watch-tab" data-tab-target="cast" role="tab" aria-selected="false">
+                            <span id="icon-tab-cast"></span> Cast <span class="watch-tab-sub">(Show All)</span>
+                        </button>
+                        <button type="button" class="watch-tab" data-tab-target="comments" role="tab" aria-selected="false">
+                            <span id="icon-tab-comments"></span> Comments <span id="comment-count-tab" class="watch-tab-count">0</span>
+                        </button>
+                        <button type="button" class="watch-tab" data-tab-target="owner" role="tab" aria-selected="false">
+                            <span id="icon-tab-owner"></span> Site Owner
+                        </button>
+                    </div>
+
+                    <!-- Tab content -->
+                    <div class="glass-panel rounded-2xl p-6 sm:p-7 mt-4 watch-tabs-content">
+                        <div class="watch-scroll-body cn-scroll">
+
+                        <!-- Description panel -->
+                        <div class="watch-tab-panel" data-tab-panel="description" role="tabpanel">
+                            <h2 class="text-xl font-bold text-white mb-4">Description</h2>
+                            <p id="watch-tagline" class="text-sm text-gray-400 italic mb-4 hidden"></p>
+                            <p id="watch-overview" class="text-sm text-gray-300 leading-relaxed"></p>
+                            <div id="watch-facts" class="grid sm:grid-cols-2 gap-x-8 mt-6"></div>
+                        </div>
+
+                        <!-- Cast panel (Show All) -->
+                        <div class="watch-tab-panel hidden" data-tab-panel="cast" role="tabpanel">
+                            <h2 class="text-xl font-bold text-white mb-4">Full Cast</h2>
+                            <div id="cast-list" class="cast-grid-sm"></div>
+                            <p id="cast-empty" class="hidden text-sm text-gray-500">Cast information isn't available for this title yet.</p>
+                        </div>
+
+                        <!-- Comments panel -->
+                        <div class="watch-tab-panel hidden" data-tab-panel="comments" role="tabpanel">
+                            <h2 class="text-xl font-bold text-white flex items-center gap-2 mb-5">
+                                Comments <span id="comment-count" class="text-sm text-gray-400 font-normal">(0)</span>
+                            </h2>
+
+                            <form id="comment-form" class="mb-6 space-y-3">
+                                <label for="comment-name" class="sr-only">Your name</label>
+                                <input type="text" id="comment-name" placeholder="Your name (optional)" maxlength="40"
+                                       class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors">
+                                <label for="comment-text" class="sr-only">Your comment</label>
+                                <textarea id="comment-text" required maxlength="600" rows="3" placeholder="Share your thoughts on this title…"
+                                          class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 transition-colors resize-none"></textarea>
+                                <button type="submit" class="btn-ember px-6 py-2.5 rounded-full text-sm font-semibold">Post Comment</button>
+                            </form>
+
+                            <p id="comment-empty" class="hidden text-sm text-gray-500 py-4 text-center">Be the first to comment.</p>
+                            <div id="comment-list"></div>
+                        </div>
+
+                        <!-- Site Owner panel -->
+                        <div class="watch-tab-panel hidden text-center" data-tab-panel="owner" role="tabpanel">
+                            <p class="text-[11px] font-semibold uppercase tracking-wide text-orange-400 mb-4">Site Owner</p>
+                            <div class="owner-avatar-ring mx-auto h-20 w-20 rounded-full p-[3px]">
+                                <div class="h-full w-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+                                    <span class="text-2xl font-bold text-orange-400">EN</span>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mt-4">Ndayambaje Elyse</h3>
+                            <p class="text-orange-400 text-xs font-semibold mt-1">Full-Stack Developer &amp; UI/UX Designer</p>
+                            <p class="text-xs text-gray-400 leading-relaxed mt-3 max-w-md mx-auto">
+                                Building fast, accessible streaming experiences with clean code and modern design — CineNova is that approach applied end to end.
+                            </p>
+                            <div class="flex justify-center gap-2 mt-5" id="owner-socials"></div>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Movies sidebar -->
+                <div class="glass-panel rounded-2xl p-5 lg:sticky lg:top-4 lg:self-start watch-side-card">
+                    <h2 class="text-sm font-bold uppercase tracking-wide text-white flex items-center gap-2 mb-4 flex-shrink-0">
+                        <span id="icon-popular"></span> Popular Movies
+                    </h2>
+                    <div id="popular-movies-list" class="watch-scroll-body cn-scroll flex flex-col gap-1"></div>
+                </div>
+            </section>
+
+            <!-- ============ SECTION 3 — RECOMMENDED ============ -->
+            <section class="reveal mt-14">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
+                    <span class="section-icon" id="icon-recommended"></span>
+                    <span id="recommended-heading">Recommended</span>
+                </h2>
+                <p id="recommended-sub" class="text-sm text-gray-400 mt-2 mb-6"></p>
+                <div id="similar-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5"></div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="footer-root"></div>
+
+    <script src="../js/icons.js"></script>
+    <script src="../js/cards.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/common.js" defer></script>
+    <script>
+        document.getElementById('icon-back').innerHTML = cnIcon('chevron', 'w-4 h-4 rotate-180');
+        document.getElementById('icon-search').innerHTML = cnIcon('search', 'w-4 h-4');
+        document.getElementById('btn-trailer').innerHTML = cnIcon('play', 'w-4 h-4') + ' Watch Trailer';
+        document.getElementById('btn-download').innerHTML = cnIcon('download', 'w-4 h-4') + ' Download';
+        document.getElementById('icon-tab-description').innerHTML = cnIcon('info', 'w-3.5 h-3.5');
+        document.getElementById('icon-tab-cast').innerHTML = cnIcon('user', 'w-3.5 h-3.5');
+        document.getElementById('icon-tab-comments').innerHTML = cnIcon('comment', 'w-3.5 h-3.5');
+        document.getElementById('icon-tab-owner').innerHTML = cnIcon('star', 'w-3.5 h-3.5');
+        document.getElementById('icon-popular').innerHTML = cnIcon('trending', 'w-4 h-4 text-orange-400');
+        document.getElementById('owner-socials').innerHTML = ['twitter', 'github', 'linkedin'].map((n) =>
+            '<a href="#" class="bg-white/5 border border-white/10 flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:text-orange-400 hover:border-orange-500 hover:bg-orange-500/10 transition-colors" aria-label="' + n.charAt(0).toUpperCase() + n.slice(1) + '">' + cnIcon(n, 'w-3.5 h-3.5') + '</a>'
+        ).join('');
+    </script>
+    <script src="../js/watch.js" defer></script>
+</body>
+</html>

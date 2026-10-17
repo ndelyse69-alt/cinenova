@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitors — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('visitors', 'Visitors', 'Most recent visits (up to 100)').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-panel"><div class="admin-panel-head"><span class="admin-panel-title">Recent Visits</span></div>' +
+                '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Time</th><th>Path</th><th>Device</th><th>Browser</th><th>Referrer</th></tr></thead><tbody id="table-body"></tbody></table></div></div>';
+
+            CNAdmin.get('../../../backend/api/admin/dashboard.php?view=visitors&limit=100').then(function (res) {
+                const rows = res.data.visits || [];
+                document.getElementById('table-body').innerHTML = rows.length ? rows.map((v) =>
+                    '<tr><td class="text-gray-500">' + CNAdmin.esc(v.timestamp || '') + '</td>' +
+                    '<td class="admin-cell-title">' + CNAdmin.esc(v.path || '/') + '</td>' +
+                    '<td>' + CNAdmin.esc(v.device || 'Unknown') + '</td>' +
+                    '<td>' + CNAdmin.esc(v.browser || 'Unknown') + '</td>' +
+                    '<td class="text-gray-500">' + CNAdmin.esc(v.referrer || '—') + '</td></tr>'
+                ).join('') : '<tr><td colspan="5" class="admin-table-empty">No visits recorded yet.</td></tr>';
+            });
+        });
+    </script>
+</body>
+</html>

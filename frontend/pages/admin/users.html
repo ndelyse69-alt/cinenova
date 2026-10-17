@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        let CURRENT_ADMIN_ID = 0;
+
+        CNAdmin.init('users', 'Users', 'Manage roles, plans, and account status').then(function (user) {
+            CURRENT_ADMIN_ID = user.id;
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-panel">' +
+                    '<div class="admin-panel-head"><span class="admin-panel-title">All Users</span></div>' +
+                    '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>User</th><th>Role</th><th>Plan</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody id="table-body"></tbody></table></div>' +
+                '</div>';
+
+            function load() {
+                CNAdmin.get('../../../backend/api/admin/users.php').then(function (res) {
+                    const rows = res.data.users || [];
+                    document.getElementById('table-body').innerHTML = rows.length ? rows.map((u) =>
+                        '<tr data-id="' + u.id + '">' +
+                            '<td><div class="admin-row-flex"><div class="admin-user-avatar">' + CNAdmin.esc((u.username || '?').charAt(0).toUpperCase()) + '</div>' +
+                                '<div><p class="admin-cell-title">' + CNAdmin.esc(u.username) + '</p><p class="admin-cell-sub">' + CNAdmin.esc(u.email || '') + '</p></div></div></td>' +
+                            '<td><select class="admin-select" data-field="role" ' + (u.id === CURRENT_ADMIN_ID ? 'disabled' : '') + '><option value="user"' + (u.role !== 'admin' ? ' selected' : '') + '>User</option><option value="admin"' + (u.role === 'admin' ? ' selected' : '') + '>Admin</option></select></td>' +
+                            '<td>' + CNAdmin.esc(u.plan || 'Free') + '</td>' +
+                            '<td><span class="admin-badge admin-badge--' + (u.status === 'suspended' ? 'suspended' : 'active') + '">' + CNAdmin.esc(u.status || 'active') + '</span></td>' +
+                            '<td class="text-gray-500">' + CNAdmin.esc(u.joined || '—') + '</td>' +
+                            '<td><div class="flex gap-2 justify-end">' +
+                                '<button class="admin-btn admin-btn-ghost admin-btn-sm" data-action="save">Save</button>' +
+                                '<button class="admin-icon-btn admin-icon-btn--danger" data-action="suspend" title="' + (u.status === 'suspended' ? 'Reactivate' : 'Suspend') + '">' + cnIcon(u.status === 'suspended' ? 'check' : 'alert', 'w-4 h-4') + '</button>' +
+                                (u.id === CURRENT_ADMIN_ID ? '' : '<button class="admin-icon-btn admin-icon-btn--danger" data-action="delete" title="Delete">' + cnIcon('trash', 'w-4 h-4') + '</button>') +
+                            '</div></td>' +
+                        '</tr>'
+                    ).join('') : '<tr><td colspan="6" class="admin-table-empty">No users yet.</td></tr>';
+                });
+            }
+
+            document.getElementById('table-body').addEventListener('click', function (e) {
+                const row = e.target.closest('tr');
+                if (!row) return;
+                const id = row.dataset.id;
+
+                if (e.target.closest('[data-action="save"]')) {
+                    const role = row.querySelector('[data-field="role"]').value;
+                    CNAdmin.post('../../../backend/api/admin/users.php', { action: 'update', id: id, role: role })
+                        .then(() => { CNAdmin.flash('success', 'User updated.'); load(); })
+                        .catch((err) => CNAdmin.flash('error', err.message));
+                }
+                if (e.target.closest('[data-action="suspend"]')) {
+                    const isSuspended = row.querySelector('.admin-badge').textContent.trim() === 'suspended';
+                    CNAdmin.post('../../../backend/api/admin/users.php', { action: 'update', id: id, status: isSuspended ? 'active' : 'suspended' })
+                        .then(() => { CNAdmin.flash('success', 'User status updated.'); load(); });
+                }
+                if (e.target.closest('[data-action="delete"]')) {
+                    if (!confirm('Delete this user account?')) return;
+                    CNAdmin.post('../../../backend/api/admin/users.php', { action: 'delete', id: id })
+                        .then(() => { CNAdmin.flash('success', 'User removed.'); load(); })
+                        .catch((err) => CNAdmin.flash('error', err.message));
+                }
+            });
+
+            load();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        CNAdmin.init('upload', 'Upload Video', 'Upload a video or poster and get back a URL to attach to a title').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-panel"><div class="admin-panel-head"><span class="admin-panel-title">Upload a File</span></div>' +
+                '<div class="admin-panel-body">' +
+                    '<div class="admin-form-grid">' +
+                        '<div class="admin-field"><label class="admin-label">File type</label>' +
+                            '<select id="upload-kind" class="admin-select"><option value="video">Video</option><option value="poster">Poster image</option></select></div>' +
+                        '<div class="admin-field"><label class="admin-label">File</label><input type="file" id="upload-file" class="admin-input"></div>' +
+                    '</div>' +
+                    '<button type="button" id="upload-btn" class="admin-btn admin-btn-primary">' + cnIcon('upload', 'w-4 h-4') + ' Upload</button>' +
+                    '<div id="upload-progress" class="hidden mt-4 text-sm text-gray-400">Uploading…</div>' +
+                    '<div id="upload-result" class="hidden mt-4 admin-panel" style="background:rgba(255,255,255,0.03)">' +
+                        '<div class="admin-panel-body">' +
+                            '<p class="text-sm text-gray-300 mb-2">Uploaded — copy this URL into a title\'s episode list (Movies &amp; Series):</p>' +
+                            '<input type="text" id="upload-url" class="admin-input" readonly onclick="this.select()">' +
+                        '</div>' +
+                    '</div>' +
+                '</div></div>';
+
+            document.getElementById('upload-btn').addEventListener('click', function () {
+                const fileInput = document.getElementById('upload-file');
+                if (!fileInput.files.length) { CNAdmin.flash('error', 'Choose a file first.'); return; }
+
+                const fd = new FormData();
+                fd.append('kind', document.getElementById('upload-kind').value);
+                fd.append('file', fileInput.files[0]);
+
+                document.getElementById('upload-progress').classList.remove('hidden');
+                document.getElementById('upload-result').classList.add('hidden');
+
+                CNAdmin.postForm('../../../backend/api/admin/upload.php', fd)
+                    .then((res) => {
+                        document.getElementById('upload-progress').classList.add('hidden');
+                        document.getElementById('upload-url').value = window.location.origin + res.data.url;
+                        document.getElementById('upload-result').classList.remove('hidden');
+                        CNAdmin.flash('success', 'Upload complete.');
+                    })
+                    .catch((err) => {
+                        document.getElementById('upload-progress').classList.add('hidden');
+                        CNAdmin.flash('error', err.message);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

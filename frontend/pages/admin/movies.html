@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies &amp; Series — CineNova Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../../images/favicon.png">
+    <link rel="stylesheet" href="../../css/tailwind.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell" id="admin-shell-root"></div>
+
+    <div class="admin-modal-overlay" id="modal-overlay">
+        <div class="admin-modal" style="max-width:640px; max-height:88vh; overflow-y:auto;">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-white" id="modal-title">Add Title</h3>
+                <button type="button" class="admin-icon-btn" id="modal-close">&times;</button>
+            </div>
+            <form id="movie-form">
+                <input type="hidden" name="slug" id="f-slug">
+                <div class="admin-form-grid">
+                    <div class="admin-field"><label class="admin-label">Title *</label><input type="text" name="title" id="f-title" class="admin-input" required></div>
+                    <div class="admin-field"><label class="admin-label">Media Type</label>
+                        <select name="media_type" id="f-media-type" class="admin-select"><option value="movie">Movie</option><option value="tv">Series</option></select></div>
+                    <div class="admin-field"><label class="admin-label">Source</label>
+                        <select name="source" id="f-source" class="admin-select"><option value="tmdb">TMDB match</option><option value="local">Local-only title</option></select></div>
+                    <div class="admin-field"><label class="admin-label">TMDB ID</label><input type="number" name="tmdb_id" id="f-tmdb-id" class="admin-input" placeholder="e.g. 550"></div>
+                    <div class="admin-field"><label class="admin-label">Genre</label><select name="genre" id="f-genre" class="admin-select"></select></div>
+                    <div class="admin-field"><label class="admin-label">Country</label><select name="country" id="f-country" class="admin-select"></select></div>
+                    <div class="admin-field"><label class="admin-label">Year</label><input type="text" name="year" id="f-year" class="admin-input" placeholder="2024"></div>
+                    <div class="admin-field"><label class="admin-label">Rating (0-10)</label><input type="number" step="0.1" min="0" max="10" name="rating" id="f-rating" class="admin-input"></div>
+                </div>
+                <div class="admin-field"><label class="admin-label">Description</label><textarea name="description" id="f-description" class="admin-textarea" rows="3"></textarea></div>
+                <div class="admin-form-grid">
+                    <div class="admin-field"><label class="admin-label">Poster URL</label><input type="text" name="poster_url" id="f-poster-url" class="admin-input" placeholder="https://…"></div>
+                    <div class="admin-field"><label class="admin-label">Or upload poster</label><input type="file" id="f-poster-file" class="admin-input" accept="image/*"></div>
+                </div>
+                <div class="admin-field"><label class="flex items-center gap-2.5 text-sm text-white"><input type="checkbox" name="use_vidsrc" id="f-use-vidsrc" class="admin-check"> Use VidSrc auto-embed (requires a valid TMDB ID)</label></div>
+                <div class="admin-field"><label class="admin-label">Episodes / sources — one per line: <code>Label | https://embed-url</code></label>
+                    <textarea name="episodes_text" id="f-episodes" class="admin-textarea" rows="4" placeholder="Full Movie | https://example.com/embed/123&#10;S1E1 | https://example.com/embed/456"></textarea></div>
+                <div class="admin-form-grid">
+                    <div class="admin-field"><label class="admin-label">Or upload a video file</label><input type="file" id="f-video-file" class="admin-input" accept="video/*"></div>
+                    <div class="admin-field"><label class="admin-label">Video label</label><input type="text" id="f-video-label" class="admin-input" placeholder="Full Movie" value="Full Movie"></div>
+                </div>
+                <div class="flex gap-3 justify-end mt-4">
+                    <button type="button" class="admin-btn admin-btn-ghost" id="modal-cancel">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-primary">Save Title</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../js/icons.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script>
+        let CATEGORIES = [];
+        let COUNTRIES = [];
+
+        CNAdmin.init('movies', 'Movies & Series', 'Add, edit, or remove catalog titles').then(function () {
+            const content = document.getElementById('admin-content');
+            content.innerHTML =
+                '<div class="admin-panel">' +
+                    '<div class="admin-panel-head">' +
+                        '<span class="admin-panel-title">Catalog</span>' +
+                        '<button type="button" class="admin-btn admin-btn-primary" id="add-btn">' + cnIcon('plus', 'w-4 h-4') + ' Add Title</button>' +
+                    '</div>' +
+                    '<div class="admin-toolbar" style="padding:1rem 1.25rem 0;">' +
+                        '<div class="admin-search-wrap"><span class="admin-search-icon">' + cnIcon('search', 'w-4 h-4') + '</span><input type="text" id="search-input" class="admin-input" placeholder="Search titles…"></div>' +
+                    '</div>' +
+                    '<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th></th><th>Title</th><th>Type</th><th>Genre</th><th>Sources</th><th></th></tr></thead><tbody id="table-body"></tbody></table></div>' +
+                '</div>';
+
+            Promise.all([
+                CNAdmin.get('../../../backend/api/admin/categories.php'),
+                CNAdmin.get('../../../backend/api/admin/countries.php'),
+            ]).then(([catRes, countryRes]) => {
+                CATEGORIES = catRes.data.categories || [];
+                COUNTRIES = countryRes.data.countries || [];
+                document.getElementById('f-genre').innerHTML = '<option value="">—</option>' + CATEGORIES.map((c) => '<option value="' + CNAdmin.esc(c.name) + '">' + CNAdmin.esc(c.name) + '</option>').join('');
+                document.getElementById('f-country').innerHTML = '<option value="">—</option>' + COUNTRIES.map((c) => '<option value="' + CNAdmin.esc(c.name) + '">' + CNAdmin.esc(c.name) + '</option>').join('');
+            });
+
+            let allMovies = [];
+            function load() {
+                CNAdmin.get('../../../backend/api/admin/movies.php').then(function (res) {
+                    allMovies = res.data.movies || [];
+                    renderTable(allMovies);
+                });
+            }
+
+            function renderTable(rows) {
+                document.getElementById('table-body').innerHTML = rows.length ? rows.map((m) =>
+                    '<tr data-slug="' + CNAdmin.esc(m.slug) + '">' +
+                        '<td><img src="' + CNAdmin.esc(m.poster_url || '') + '" class="admin-poster-thumb" alt=""></td>' +
+                        '<td class="admin-cell-title">' + CNAdmin.esc(m.title) + '<div class="admin-cell-sub">' + CNAdmin.esc(m.year || '') + ' &middot; ' + CNAdmin.esc(m.source) + '</div></td>' +
+                        '<td><span class="admin-badge admin-badge--' + m.media_type + '">' + (m.media_type === 'tv' ? 'Series' : 'Movie') + '</span></td>' +
+                        '<td class="text-gray-400">' + CNAdmin.esc(m.genre || '—') + '</td>' +
+                        '<td class="text-gray-400">' + m.episode_count + ' source' + (m.episode_count === 1 ? '' : 's') + (m.use_vidsrc ? ' + VidSrc' : '') + '</td>' +
+                        '<td><div class="flex gap-2 justify-end">' +
+                            '<button class="admin-icon-btn" data-action="edit" title="Edit">' + cnIcon('edit', 'w-4 h-4') + '</button>' +
+                            '<button class="admin-icon-btn admin-icon-btn--danger" data-action="delete" title="Delete">' + cnIcon('trash', 'w-4 h-4') + '</button>' +
+                        '</div></td>' +
+                    '</tr>'
+                ).join('') : '<tr><td colspan="6" class="admin-table-empty">No titles yet — click "Add Title" to get started.</td></tr>';
+            }
+
+            document.getElementById('search-input').addEventListener('input', function () {
+                const q = this.value.toLowerCase();
+                renderTable(allMovies.filter((m) => m.title.toLowerCase().includes(q)));
+            });
+
+            // ---- Modal ----
+            const overlay = document.getElementById('modal-overlay');
+            const form = document.getElementById('movie-form');
+
+            function openModal(editSlug) {
+                form.reset();
+                document.getElementById('f-slug').value = editSlug || '';
+                document.getElementById('modal-title').textContent = editSlug ? 'Edit Title' : 'Add Title';
+
+                if (editSlug) {
+                    CNAdmin.get('../../../backend/api/admin/movies.php?slug=' + encodeURIComponent(editSlug)).then((res) => {
+                        const m = res.data.movie;
+                        document.getElementById('f-title').value = m.title || '';
+                        document.getElementById('f-media-type').value = m.media_type || 'movie';
+                        document.getElementById('f-source').value = m.source || 'tmdb';
+                        document.getElementById('f-tmdb-id').value = m.tmdb_id || '';
+                        document.getElementById('f-genre').value = m.genre || '';
+                        document.getElementById('f-country').value = m.country || '';
+                        document.getElementById('f-year').value = m.year || '';
+                        document.getElementById('f-rating').value = m.rating || '';
+                        document.getElementById('f-description').value = m.description || '';
+                        document.getElementById('f-poster-url').value = m.poster_url || '';
+                        document.getElementById('f-use-vidsrc').checked = !!m.use_vidsrc;
+                        document.getElementById('f-episodes').value = m.episodes_text || '';
+                    });
+                }
+                overlay.classList.add('is-open');
+            }
+            function closeModal() { overlay.classList.remove('is-open'); }
+
+            document.getElementById('add-btn').addEventListener('click', () => openModal(null));
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('modal-cancel').addEventListener('click', closeModal);
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+            document.getElementById('table-body').addEventListener('click', function (e) {
+                const row = e.target.closest('tr');
+                if (!row) return;
+                const slug = row.dataset.slug;
+                if (e.target.closest('[data-action="edit"]')) openModal(slug);
+                if (e.target.closest('[data-action="delete"]')) {
+                    if (!confirm('Delete this title from the catalog?')) return;
+                    CNAdmin.post('../../../backend/api/admin/movies.php', { action: 'delete', slug: slug })
+                        .then(() => { CNAdmin.flash('success', 'Title removed.'); load(); });
+                }
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const fd = new FormData();
+                const slug = document.getElementById('f-slug').value;
+                fd.append('action', slug ? 'update' : 'create');
+                if (slug) fd.append('slug', slug);
+                fd.append('title', document.getElementById('f-title').value);
+                fd.append('media_type', document.getElementById('f-media-type').value);
+                fd.append('source', document.getElementById('f-source').value);
+                fd.append('tmdb_id', document.getElementById('f-tmdb-id').value);
+                fd.append('genre', document.getElementById('f-genre').value);
+                fd.append('country', document.getElementById('f-country').value);
+                fd.append('year', document.getElementById('f-year').value);
+                fd.append('rating', document.getElementById('f-rating').value);
+                fd.append('description', document.getElementById('f-description').value);
+                fd.append('poster_url', document.getElementById('f-poster-url').value);
+                if (document.getElementById('f-use-vidsrc').checked) fd.append('use_vidsrc', '1');
+                fd.append('episodes_text', document.getElementById('f-episodes').value);
+                fd.append('video_label', document.getElementById('f-video-label').value);
+
+                const posterFile = document.getElementById('f-poster-file').files[0];
+                if (posterFile) fd.append('poster_file', posterFile);
+                const videoFile = document.getElementById('f-video-file').files[0];
+                if (videoFile) fd.append('video_file', videoFile);
+
+                CNAdmin.postForm('../../../backend/api/admin/movies.php', fd)
+                    .then(() => { closeModal(); CNAdmin.flash('success', 'Title saved.'); load(); })
+                    .catch((err) => CNAdmin.flash('error', err.message));
+            });
+
+            load();
+        });
+    </script>
+</body>
+</html>

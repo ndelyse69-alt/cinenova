@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "name": "Drama",
+        "slug": "drama",
+        "description": "Character-driven, emotionally rich stories."
+    },
+    {
+        "id": 2,
+        "name": "Action",
+        "slug": "action",
+        "description": "High-stakes thrills, stunts, and set pieces."
+    },
+    {
+        "id": 3,
+        "name": "Horror",
+        "slug": "horror",
+        "description": "Scares, suspense, and the supernatural."
+    },
+    {
+        "id": 4,
+        "name": "Indian Cinema",
+        "slug": "indian-cinema",
+        "description": "Bollywood and regional Indian releases."
+    },
+    {
+        "id": 5,
+        "name": "Animation",
+        "slug": "animation",
+        "description": "Animated features for all ages."
+    },
+    {
+        "id": 6,
+        "name": "Science Fiction",
+        "slug": "science-fiction",
+        "description": "Futuristic worlds and speculative tech."
+    }
+]
